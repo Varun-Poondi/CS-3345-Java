@@ -94,7 +94,7 @@ public class GenLinkedList<T extends Comparable<T>>{
     }
     public void set(int position, T payload){
         if (head != null) {
-            if (position < getSize() && position >= 0) {
+            if (position <= getSize() && position >= 0) {
                 int counter = 0;
                 Node<T> currentNode = head;
                 while (currentNode.getNext() != null && counter != position) {
@@ -114,16 +114,17 @@ public class GenLinkedList<T extends Comparable<T>>{
                 Node<T> node1 = getNodeAtPosition(pos1);
                 Node<T> node2 = getNodeAtPosition(pos2);
                 if(node1 != null && node2 != null) {
+                    T temp = node1.getPayload();
                     set(pos1, node2.getPayload());
-                    set(pos2, node1.getPayload());
+                    set(pos2, temp);
                 }else{
                     System.out.println("Null Node was found");
                 }
             }else if(getSize() == 0) {
                 System.out.println("Linked List is Empty");
             }else{
-                System.out.println("Position 1 or Position 2 is out of bounds\n" +
-                        "Must be between 0 and " + getSize());
+                System.out.println("Position 1 or Position 2 is out of bounds, " +
+                        "must be between 0 and " + getSize());
             }
         }
     }
@@ -149,7 +150,7 @@ public class GenLinkedList<T extends Comparable<T>>{
         if(head != null) {
             int size = 0;
             Node<T> currentNode = head;
-            while(currentNode.getNext() != null){
+            while(currentNode != null){
                 currentNode = currentNode.getNext();
                 size ++;
             }
@@ -161,9 +162,10 @@ public class GenLinkedList<T extends Comparable<T>>{
     /*********************************************************/
     public void removeMatching(T payload){
          if(head != null){
+             System.out.println("Removing " + payload + " ....");
              Node<T> currentNode = head;
              Node<T> previousNode = null;
-             while(currentNode.getNext() != null){
+             while(currentNode != null){
                  if(currentNode.getPayload() == payload){
                      if(currentNode == head){
                          head = head.getNext();
@@ -185,15 +187,17 @@ public class GenLinkedList<T extends Comparable<T>>{
                     Node<T> currentNode = getNodeAtPosition(position); //pointing to the same address
                     Node<T> previousNode = null;
                     int counter = position;
-                    while (currentNode.getNext() != null && counter != limit) {
-                        if(currentNode == head){
-                            head = head.getNext();
-                        }else if(previousNode != null){
-                            previousNode.setNext(currentNode.getNext());
+                    if (currentNode != null) {
+                        while (currentNode.getNext() != null && counter != limit) {
+                            if (currentNode == head) {
+                                head = head.getNext();
+                            } else if (previousNode != null) {
+                                previousNode.setNext(currentNode.getNext());
+                            }
+                            previousNode = currentNode;
+                            currentNode = currentNode.getNext();
+                            counter++;
                         }
-                        previousNode = currentNode;
-                        currentNode = currentNode.getNext();
-                        counter ++;
                     }
                 }else{
                     System.out.println("Your position value cannot be greater than limit");

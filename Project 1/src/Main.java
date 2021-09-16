@@ -50,8 +50,40 @@ public class Main {
 
         /***********************/
         //Swap two nodes
-        test.swap(1,2);
+        test.swap(1,2); 
+        test.print(); ////Output: Current Linked List: 56 99 420 20 
+        test.swap(1,4); //Should give error message 
+        test.swap(0,3);
         test.print();
+        /***********************/
+        //Tests removeMatching, erase, insertList methods 
+        GenLinkedList<Integer> newTest = new GenLinkedList<>();
+        System.out.println("\nLinked List 2");
+        newTest.addFront(29);
+        newTest.addFront(33);
+        newTest.addFront(29);
+        newTest.addFront(87);
+        newTest.addFront(29);
+        newTest.addFront(389);
+        newTest.addFront(29);
+        newTest.print();
+        
+        newTest.removeMatching(29);
+        newTest.print();
+        
+        newTest.addFront(87);
+        newTest.print();
+        newTest.removeMatching(87);
+        newTest.print();
+        
+        System.out.println("Current Linked List Size: " + newTest.getSize());
+        newTest.print();
+        
+        
+        
+        
+        //When do we use current.getNext() vs current when we check if isn't null? 
+        
         
         
         
