@@ -164,9 +164,52 @@ public class GenLinkedList<T extends Comparable<T>>{
             }
         }
     }
-    public void shift(int shiftVal){
-        //??
+    private void shift_buffer(Node<T> head1, Node<T> head2, int counter){
+        while (head2 != null && counter != getSize()) {
+            Node<T> deleteNode = getNodeAtPosition(counter);
+            if (deleteNode != null) {
+                removeMatching(deleteNode.getPayload());
+            }
+            head2 = head2.getNext();
+        }
+        head2 = head;
+        if (head1 != null) {
+            Node<T> temp = head1;
+            while (head1.getNext() != null) {
+                head1 = head1.getNext();
+            }
+            head1.setNext(head2);
+            head = temp;
+        }
     }
+    public void shift(int shiftVal) throws Exception {
+        String exception = "";
+        if(head != null) {
+            Node<T> head2 = head;
+            if (shiftVal > 0) {
+                if(shiftVal < getSize()) {
+                    Node<T> head1 = getNodeAtPosition(shiftVal);
+                    int counter = Math.abs(shiftVal);
+                    shift_buffer(head1, head2, counter);
+                }else{
+                    exception = "Shift val is out of bounds, too positive";
+                }
+            } else if (shiftVal < 0) {
+                if(shiftVal > -1*getSize()) {
+                    int counter = getSize() - Math.abs(shiftVal);
+                    Node<T> head1 = getNodeAtPosition(counter);
+                    shift_buffer(head1, head2, counter);
+                }else{
+                    exception = "Shift Val is out of bounds, too negative.";
+                }
+            }
+            if (!exception.equals("")) {
+                throw new Exception(exception);
+            }
+        }
+    }
+        
+        //??
     public void print(){
         if(getSize() != 0) {
             System.out.print("Current Linked List: ");
@@ -198,7 +241,6 @@ public class GenLinkedList<T extends Comparable<T>>{
     /*********************************************************/
     public void removeMatching(T payload){
          if(head != null){
-             System.out.println("Removing " + payload + " ....");
              Node<T> currentNode = head;
              Node<T> previousNode = null;
              while(currentNode != null){
@@ -247,104 +289,105 @@ public class GenLinkedList<T extends Comparable<T>>{
             }
         }
     }
-    public void insertList(List<T> list){
+    public void insertList(List<T> list, int position){
+        
         
     }
 
     public static void main(String[] args) throws Exception {
-        GenLinkedList<Integer> test = new GenLinkedList<>();
-        System.out.println("Test is type Integer linked list.\n");
-        
-        System.out.println("____________ addFront() and addEnd() Test ____________");
-        test.print();
-        
-        System.out.println("\nAdding to the front");
-        test.addFront(1);
-        test.print();
-        test.addFront(2);
-        test.print();
-        test.addFront(1310);
-        test.print();
-        test.addFront(29029);
-        test.print();
-        
-        System.out.println("\nAdding to the end");
-        test.addEnd(10);
-        test.print();
-        test.addEnd(20);
-        test.print();
-        test.addEnd(30);
-        test.print();
-        test.addEnd(40);
-        test.print();
-
-        System.out.println("\n____________ removeFront() and removeEnd() Test ____________");
-        test.print();
-
-        System.out.println("\nRemoving from Front");
-        test.removeFront();
-        test.print(); 
-        test.removeFront();
-        test.print();
-
-        System.out.println("\nRemoving from End");
-        test.removeEnd();
-        test.print(); 
-        test.removeEnd();
-        test.print();
-
-        System.out.println("\n____________ get() and set() Test ____________");
-        test.print();
-        System.out.println("\nGetting Node Payload");
-        if(test.get(2) != null){
-            System.out.println("Payload at position 2: " + test.get(2));
-        }else{
-            System.out.println("Required position is out of bounds.");
-        }
-
-        System.out.println("\nGetting Node payload at index that is out of bounds");
-        if(test.get(10) != null){
-            System.out.println("Payload at position 2: " + test.get(2));
-        }else{
-            System.out.println("Required position is out of bounds.");
-        }
-        //Output: Required position is out of bounds.
-        System.out.println("\nSetting Node Payload");
-        test.set(2,99);
-        test.print();
-        test.set(1,420);
-        test.print(); //Output: Current Linked List: 56 420 99 20
-        
-        System.out.println("\n____________ Swap Test ____________");
-        
-        try{
-            test.print();
-            System.out.println("\nSwap Nodes 2 and 0");     // pos1 > pos2 test case
-            test.swap(2,0);
-            test.print();
-
-            System.out.println("\nSwap Nodes 1 and 2");     // base case
-            test.swap(1,2);
-            test.print();
-
-            System.out.println("\nSwap Nodes 1 and 3");     // swap middle node and last node
-            test.swap(1,3);
-            test.print();
-
-            System.out.println("\nSwap Nodes 0 and 2");     // swap head and middle node
-            test.swap(0,2);
-            test.print();
-
-            System.out.println("\nSwap Nodes 0 and 3");     // swap head and last node
-            test.swap(0,3);
-            test.print();
-            
-            System.out.println("\nSwap Same Position Exception");     // Exception sample test case
-            test.swap(0,0);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        test.print();
+//        GenLinkedList<Integer> test = new GenLinkedList<>();
+//        System.out.println("Test is type Integer linked list.\n");
+//        
+//        System.out.println("____________ addFront() and addEnd() Test ____________");
+//        test.print();
+//        
+//        System.out.println("\nAdding to the front");
+//        test.addFront(1);
+//        test.print();
+//        test.addFront(2);
+//        test.print();
+//        test.addFront(1310);
+//        test.print();
+//        test.addFront(29029);
+//        test.print();
+//        
+//        System.out.println("\nAdding to the end");
+//        test.addEnd(10);
+//        test.print();
+//        test.addEnd(20);
+//        test.print();
+//        test.addEnd(30);
+//        test.print();
+//        test.addEnd(40);
+//        test.print();
+//
+//        System.out.println("\n____________ removeFront() and removeEnd() Test ____________");
+//        test.print();
+//
+//        System.out.println("\nRemoving from Front");
+//        test.removeFront();
+//        test.print(); 
+//        test.removeFront();
+//        test.print();
+//
+//        System.out.println("\nRemoving from End");
+//        test.removeEnd();
+//        test.print(); 
+//        test.removeEnd();
+//        test.print();
+//
+//        System.out.println("\n____________ get() and set() Test ____________");
+//        test.print();
+//        System.out.println("\nGetting Node Payload");
+//        if(test.get(2) != null){
+//            System.out.println("Payload at position 2: " + test.get(2));
+//        }else{
+//            System.out.println("Required position is out of bounds.");
+//        }
+//
+//        System.out.println("\nGetting Node payload at index that is out of bounds");
+//        if(test.get(10) != null){
+//            System.out.println("Payload at position 2: " + test.get(2));
+//        }else{
+//            System.out.println("Required position is out of bounds.");
+//        }
+//        //Output: Required position is out of bounds.
+//        System.out.println("\nSetting Node Payload");
+//        test.set(2,99);
+//        test.print();
+//        test.set(1,420);
+//        test.print(); //Output: Current Linked List: 56 420 99 20
+//        
+//        System.out.println("\n____________ Swap Test ____________");
+//        
+//        try{
+//            test.print();
+//            System.out.println("\nSwap Nodes 2 and 0");     // pos1 > pos2 test case
+//            test.swap(2,0);
+//            test.print();
+//
+//            System.out.println("\nSwap Nodes 1 and 2");     // base case
+//            test.swap(1,2);
+//            test.print();
+//
+//            System.out.println("\nSwap Nodes 1 and 3");     // swap middle node and last node
+//            test.swap(1,3);
+//            test.print();
+//
+//            System.out.println("\nSwap Nodes 0 and 2");     // swap head and middle node
+//            test.swap(0,2);
+//            test.print();
+//
+//            System.out.println("\nSwap Nodes 0 and 3");     // swap head and last node
+//            test.swap(0,3);
+//            test.print();
+//            
+//            System.out.println("\nSwap Same Position Exception");     // Exception sample test case
+//            test.swap(0,0);
+//        }catch(Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//        test.print();
 
         System.out.println("\n____________ removeMatching() Test ____________");
         GenLinkedList<String> test1 = new GenLinkedList<>();
@@ -406,6 +449,51 @@ public class GenLinkedList<T extends Comparable<T>>{
             test1.print();
         }
         
+
+        System.out.println("\n____________ shift () Test ____________");
+        test1.removeFront();
+        test1.removeFront();
+        test1.removeFront();
+
+        test1.addEnd("A");
+        test1.addEnd("B");
+        test1.addEnd("C");
+        test1.addEnd("D");
+        test1.addEnd("E");
+        test1.addEnd("F");
+        test1.print();
+        
+        System.out.println("\nShift + 3 (left)");
+        test1.shift(3);
+        test1.print();
+        System.out.println("\nShift + 5 (left)");
+        test1.shift(5);
+        test1.print();
+        System.out.println("\nShift + 2 (left)");
+        test1.shift(2);
+        test1.print();
+        System.out.println("\nShift + 2 (left)");
+        test1.shift(1);
+        test1.print();
+
+        System.out.println("\nShift 0");
+        try {
+            test1.shift(0);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        test1.print();
+
+
+        System.out.println("\nShift -3 (right)");
+        test1.addEnd("G");
+        
+        test1.shift(-3);
+        test1.print();
+
+        System.out.println("\nShift -5 (right)");
+        test1.shift(-5);
+        test1.print();
         
     }
 }
