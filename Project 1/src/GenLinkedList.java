@@ -53,23 +53,23 @@ public class GenLinkedList<T extends Comparable<T>>{
     }
     public void removeEnd() {
         if (head != null) {
-            Node<T> currentNode = head;
-            Node<T> previousNode = null;
+            Node<T> currentNode = head; //traverser
+            Node<T> previousNode = null; //saves the previous node of currentNode
             while (currentNode.getNext() != null) {
-                previousNode = currentNode;
-                currentNode = currentNode.getNext();
+                previousNode = currentNode; //save currentNode
+                currentNode = currentNode.getNext(); //travere
             }
-            if (previousNode != null) {
-                previousNode.setNext(currentNode.getNext());
+            if (previousNode != null) { //make sure the previoys is null, would never be the case
+                previousNode.setNext(currentNode.getNext()); // set the preivous node to point to currentNode's next node
             }
         }
     }
     public T get(int position){
         if(head != null) {
-            if (position < getSize() && position >= 0) {
-                Node<T> currentNode = getNodeAtPosition(position);
-                if (currentNode != null) {
-                    return currentNode.getPayload();
+            if (position < getSize() && position >= 0) { //bounds check
+                Node<T> currentNode = getNodeAtPosition(position); // get the node at the given position
+                if (currentNode != null) { //check if it is null
+                    return currentNode.getPayload(); //return payload
                 }
             }
         }
@@ -78,16 +78,16 @@ public class GenLinkedList<T extends Comparable<T>>{
     private Node<T> getNodeAtPosition(int pos){
         if(head != null){
             int counter = 0;
-            Node<T> currentNode = head;
-            while(currentNode.getNext() != null && counter != pos){
-                counter ++;
-                currentNode = currentNode.getNext();
+            Node<T> currentNode = head; //traverse node
+            while(currentNode.getNext() != null && counter != pos){ // until you reach the end of the linked list or you reached the position of the node
+                counter ++; 
+                currentNode = currentNode.getNext(); //move to the next node
             }
             return currentNode;
         }
         return null;
     }
-    private Node<T> getPreviousNodeAtPosition(int pos){
+    private Node<T> getPreviousNodeAtPosition(int pos){ //same code as getNodeAtPosition() except we are returning the preious node of the currentNode
         if(head != null){
             int counter = 0;
             Node<T> previous = null;
@@ -104,14 +104,14 @@ public class GenLinkedList<T extends Comparable<T>>{
     
     public void set(int position, T payload){
         if (head != null) {
-            if (position < getSize() && position >= 0) {
+            if (position < getSize() && position >= 0) { //bounds check
                 int counter = 0;
-                Node<T> currentNode = head;
-                while (currentNode.getNext() != null && counter != position) {
+                Node<T> currentNode = head; //traverse node
+                while (currentNode.getNext() != null && counter != position) { //traverse until we have reached desire position
                     counter++;
                     currentNode = currentNode.getNext();
                 }
-                currentNode.setPayload(payload);
+                currentNode.setPayload(payload); //at the current node, set the payload with the given payload
                 
             }else{
                 System.out.println("Required position is out of bounds.");
