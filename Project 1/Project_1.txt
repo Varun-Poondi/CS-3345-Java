@@ -173,3 +173,27 @@ Submit to eLearning:
          
          System.out.println("Current Linked List Size: " + newTest.getSize());
          newTest.print();
+         
+         
+         
+                             Node<T> traverse = head1;
+                             Node<T> previous = null;
+                             boolean copyNotFinished = true;
+                             if(traverse != null) {
+                                 while (copyNotFinished) {
+                                     while (traverse.getNext() != null) {
+                                         previous = traverse;
+                                         traverse = traverse.getNext();
+                                     }
+         
+                                     if (previous != null) {
+                                         previous.setNext(traverse.getNext());
+                                     }
+                                     
+         
+                                     traverse = head1;
+                                     if (head1.getPayload() == head2.getPayload()) {
+                                         copyNotFinished = false;
+                                     }
+                                 }
+                             }
