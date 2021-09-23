@@ -30,40 +30,57 @@ public class GenLinkedList<T extends Comparable<T>>{
         }
     }
     private Node<T> head;
+    private Node<T> tail;
     
     public void addFront(T payload){
-        Node<T> newNode = new Node<>(payload); // create new node
-        newNode.setNext(head); // set the head's previous node as the newNode
-        head = newNode; //make the newNode as the new head
+        if(head == null) {
+            head = new Node<>(payload);
+            tail = head;
+        }else{ 
+            Node<T> newNode = new Node<>(payload); // create new node
+            newNode.setNext(head); // set the head's previous node as the newNode
+            head = newNode; //make the newNode as the new head
+        }
     }
     public void addEnd(T payload){  
         Node<T> currentNode = head; 
         if(currentNode == null){    //check if the linked list is empty
             currentNode = new Node<>(payload);  
             head = currentNode; // add the node into the linked list and set it as the head
+            tail = head;
         }else{  
-            Node<T> newNode = new Node<>(payload); 
-            while(currentNode.getNext() != null){ //traverse till you reach the end of the linked list
-                currentNode = currentNode.getNext();
-            }
-            currentNode.setNext(newNode); // set the newNode at the end of the linked list 
+            Node<T> newNode = new Node<>(payload);
+            tail.setNext(newNode); // set the tail to point to the new node
+            tail = newNode; // set the new node as the tail
         }
     }
     public void removeFront(){
-        if(head != null){   
-            head = head.getNext(); // move the head pointer to the head's next node. Garbage collection will take care of the rest
+        if(head != null){
+            if(head == tail){ //if there is only one node in LL, set the head and tail as null
+                head = null; 
+                tail = null; 
+            }else{
+                head = head.getNext(); // move the head to the next node
+            }
         }
     }
-    public void removeEnd() {
+    public void removeEnd() throws Exception {
         if (head != null) {
             Node<T> currentNode = head; //travers node
             Node<T> previousNode = null; //saves the previous node of currentNode
-            while (currentNode.getNext() != null) {
-                previousNode = currentNode; //save currentNode
-                currentNode = currentNode.getNext(); //traverse
-            }
-            if (previousNode != null) { //make sure the previous is null, would never be the case
-                previousNode.setNext(currentNode.getNext()); // set the previous node to point to currentNode's next node
+            if (head == tail) { //if there is only one node in LL, set the head and tail as null
+                head = null;
+                tail = null;
+            } else {
+                while (currentNode.getNext() != null) { //traverse the LL to get the previous node of the last node
+                    previousNode = currentNode; //save currentNode
+                    currentNode = currentNode.getNext(); //traverse
+                }
+                //make sure the previous is null, would never be the case
+                if (previousNode != null) { // check if the previous node is not null
+                    previousNode.setNext(tail.getNext()); // set the previous node to point to currentNode's next node
+                    tail = previousNode; //update tail
+                }
             }
         }
     }
@@ -80,7 +97,7 @@ public class GenLinkedList<T extends Comparable<T>>{
     }
     private Node<T> getNodeAtPosition(int pos){
         if(head != null) {
-            if (pos < getSize() && pos >= 0) {
+            if (pos < getSize()-1 && pos >= 0) {
                 int counter = 0;
                 Node<T> currentNode = head; //traverse node
                 while (currentNode.getNext() != null && counter != pos) { // until you reach the end of the linked list or you reached the position of the node
@@ -88,6 +105,8 @@ public class GenLinkedList<T extends Comparable<T>>{
                     currentNode = currentNode.getNext(); //move to the next node
                 }
                 return currentNode;
+            }else if(pos < getSize()){
+                return tail; // get tail if asked for last node
             }
         }
         return null;
@@ -136,7 +155,8 @@ public class GenLinkedList<T extends Comparable<T>>{
                 Node<T> node1Previous = getPreviousNodeAtPosition(pos1);      // get node1's previous node
                 Node<T> node2 = getNodeAtPosition(pos2);              // get node2
                 Node<T> node2Previous = getPreviousNodeAtPosition(pos2);      // get node2's previous node
-
+                
+                
                 if(node1Previous == null){ 
                    head = node2;    // set head to point to node2
                 }else{  
@@ -155,6 +175,12 @@ public class GenLinkedList<T extends Comparable<T>>{
                     Node<T> temp = node2.getNext(); // save node2.getNext() since it will change when we set node2's next to node1's next
                     node2.setNext(node1.getNext()); //link node2 next pointer to node1's next
                     node1.setNext(temp); // set the temp to node1 to finish the swap
+                    if(node1 == tail){ //check if node1 was is the tail
+                        tail = node2; // set the tail to node2 since there was a tail swap
+                    }
+                    if(node2 == tail){
+                        tail = node1; //set the tail as node1 since there was a tail swap
+                    }
                 }else{
                     exception = "Null Node Found";
                 }
@@ -185,10 +211,15 @@ public class GenLinkedList<T extends Comparable<T>>{
         head2 = head; // reset the head
         if (head1 != null) { //check if the head is null
             Node<T> temp = head1; // temp will be used to make head1 the official head of the master linked list.
+            Node<T> temp1 = head2;
             while (head1.getNext() != null) { // traverse to end of head1 linked list
                 head1 = head1.getNext();
             }
-            head1.setNext(head2); // at the end of the chained nodes, set head1's next pointer to head2. All nodes are now in the desired position and the shift is complete
+            while(head2.getNext() != null){
+                head2 = head2.getNext();
+            }
+            tail = head2;
+            head1.setNext(temp1); // at the end of the chained nodes, set head1's next pointer to head2. All nodes are now in the desired position and the shift is complete
             head = temp; // set the temp as the official head of the master linked list
         }
     }
@@ -265,6 +296,9 @@ public class GenLinkedList<T extends Comparable<T>>{
                      if(currentNode == head){ // if the current node is the head
                          head = head.getNext(); // move the head to next node and delete current node
                      }else if(previousNode != null){  
+                         if(currentNode == tail){
+                             tail = previousNode;
+                         }
                          previousNode.setNext(currentNode.getNext()); // set the previous node to point to the currentNode's next node, thus deleting currentNode
                      }
                  }else{
@@ -294,6 +328,9 @@ public class GenLinkedList<T extends Comparable<T>>{
                         if (currentNode == head) { 
                             head = head.getNext(); // delete the currentNode if its the head
                         } else if (previousNode != null) {
+                            if(currentNode == tail){
+                                tail = previousNode;
+                            }
                             previousNode.setNext(currentNode.getNext()); // delete the currentNode if it's in the middle of the list
                         }
                         previousNode = getPreviousNodeAtPosition(position); // update the previous to maintain previous delete position
@@ -332,6 +369,7 @@ public class GenLinkedList<T extends Comparable<T>>{
                         currentNode = currentNode.getNext();
                     }
                     currentNode.setNext(list.head); // add the list to the end of the master list
+                    tail = list.tail;
                 }else{
                     Node<T> currentNode = head; // traverse
                     Node<T> next = currentNode.getNext(); // the next node after the currentNode. Used to link both ends of the list to the master list
@@ -463,7 +501,7 @@ public class GenLinkedList<T extends Comparable<T>>{
         test.print();
 
         test.addEnd(7);
-        System.out.println("\nAdded Payload G to Linked List 1");
+        System.out.println("\nAdded Payload 7 to Linked List 1");
         test.print();
 
         System.out.println("\nTest #5:\nShift -3 (right)");
@@ -582,12 +620,13 @@ public class GenLinkedList<T extends Comparable<T>>{
 
         System.out.println("\n______________ insertList() Test ______________");
         
-        System.out.println("Creating Sample Linked List\n");
+        System.out.println("Linked List 1:");
         list1.removeEnd();
         list1.removeEnd();
         list1.removeEnd();
-        list1.removeEnd();
-        System.out.println("Linked List 1 (Shorted With Deletes):");
+        list1.addEnd("X");
+        list1.addFront("Y");
+        list1.addFront("Z");
         list1.print();
 
         System.out.println("\nList 2:");
@@ -625,8 +664,8 @@ public class GenLinkedList<T extends Comparable<T>>{
         list1.insertList(list2, 0);
         list1.print();
 
-        System.out.println("\nTest #2:\nInsert List 3 at pos 2 in List 1. (End of the linked list insert test)");
-        list1.insertList(list3, 5);
+        System.out.println("\nTest #2:\nInsert List 3 at pos 7 in List 1. (End of the linked list insert test)");
+        list1.insertList(list3, 7);
         list1.print();
 
         System.out.println("\nTest #3:\nInsert List 4 at pos 4 in List 1. (Middle of the linked list insert test)");
