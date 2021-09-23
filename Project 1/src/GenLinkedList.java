@@ -79,14 +79,16 @@ public class GenLinkedList<T extends Comparable<T>>{
         return null;
     }
     private Node<T> getNodeAtPosition(int pos){
-        if(head != null){
-            int counter = 0;
-            Node<T> currentNode = head; //traverse node
-            while(currentNode.getNext() != null && counter != pos){ // until you reach the end of the linked list or you reached the position of the node
-                counter ++; 
-                currentNode = currentNode.getNext(); //move to the next node
+        if(head != null) {
+            if (pos < getSize() && pos >= 0) {
+                int counter = 0;
+                Node<T> currentNode = head; //traverse node
+                while (currentNode.getNext() != null && counter != pos) { // until you reach the end of the linked list or you reached the position of the node
+                    counter++;
+                    currentNode = currentNode.getNext(); //move to the next node
+                }
+                return currentNode;
             }
-            return currentNode;
         }
         return null;
     }
@@ -410,7 +412,7 @@ public class GenLinkedList<T extends Comparable<T>>{
             System.out.println("Required position is out of bounds.");
         }
 
-        System.out.println("\nTest #2:\nGetting Node payload at index that is out of bounds");
+        System.out.println("\nTest #2:\nGetting Node payload at index that is out of bounds. Get Node at pos 10");
         if(test.get(10) != null){
             System.out.println("Payload at position 2: " + test.get(2));
         }else{
@@ -423,7 +425,65 @@ public class GenLinkedList<T extends Comparable<T>>{
         System.out.println("\nTest #2:\nSetting Node Payload at pos 1 to 420");
         test.set(1,420);
         test.print(); //Output: Current Linked List: 56 420 99 20
+        
+        System.out.println("\n____________ shift () Test ____________");
+        test.removeFront();
+        test.removeFront();
 
+        test.addEnd(1);
+        test.addEnd(2);
+        test.addEnd(3);
+        test.addEnd(4);
+        test.addEnd(5);
+        test.addEnd(6);
+        test.print();
+
+        System.out.println("\nTest #1:\nShift + 5 (left)");
+        test.shift(5);
+        test.print();
+
+        System.out.println("\nTest #2:\nShift + 2 (left)");
+        test.shift(2);
+        test.print();
+
+        System.out.println("\nTest #3:\nShift + 8 (left) -> Exception handled");
+        try {
+            test.shift(8);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        test.print();
+
+        System.out.println("\nTest #4:\nShift 0 -> Exception handled");
+        try {
+            test.shift(0);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        test.print();
+
+        test.addEnd(7);
+        System.out.println("\nAdded Payload G to Linked List 1");
+        test.print();
+
+        System.out.println("\nTest #5:\nShift -3 (right)");
+
+        test.shift(-3);
+        test.print();
+
+        System.out.println("\nTest #6:\nShift -5 (right)");
+        test.shift(-5);
+        test.print();
+
+        System.out.println("\nTest #7:\nShift -9 (left) -> Exception handled");
+        try {
+            test.shift(-9);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        test.print();
+        
+        
         System.out.println("\n____________ Swap Test ____________");
 
         try{
@@ -444,8 +504,8 @@ public class GenLinkedList<T extends Comparable<T>>{
             test.swap(0,2);
             test.print();
 
-            System.out.println("\nTest #5:\nSwap Nodes index 0 and 3");     // swap head and last node
-            test.swap(0,3);
+            System.out.println("\nTest #5:\nSwap Nodes index 0 and 8");     // swap head and last node
+            test.swap(0,8);
             test.print();
 
             System.out.println("\nTest #6:\nSwap Same Position Exception. Swap Nodes index 0 and 0");     // Exception sample test case
@@ -519,66 +579,9 @@ public class GenLinkedList<T extends Comparable<T>>{
         }finally {
             list1.print();
         }
-        
-
-        System.out.println("\n____________ shift () Test ____________");
-        list1.removeFront();
-        list1.removeFront();
-        list1.removeFront();
-
-        list1.addEnd("A");
-        list1.addEnd("B");
-        list1.addEnd("C");
-        list1.addEnd("D");
-        list1.addEnd("E");
-        list1.addEnd("F");
-        list1.print();
-        
-        System.out.println("\nTest #1:\nShift + 5 (left)");
-        list1.shift(5);
-        list1.print();
-        
-        System.out.println("\nTest #2:\nShift + 2 (left)");
-        list1.shift(2);
-        list1.print();
-        
-        System.out.println("\nTest #3:\nShift + 6 (left) -> Exception handled");
-        try {
-            list1.shift(6);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        list1.print();
-
-        System.out.println("\nTest #4:\nShift 0 -> Exception handled");
-        try {
-            list1.shift(0);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        list1.print();
-
-        list1.addEnd("G");
-        System.out.println("\nAdded Payload G to Linked List 1");
-
-        System.out.println("\nTest #5:\nShift -3 (right)");
-        
-        list1.shift(-3);
-        list1.print();
-
-        System.out.println("\nTest #6:\nShift -5 (right)");
-        list1.shift(-5);
-        list1.print();
-
-        System.out.println("\nTest #7:\nShift -7 (left) -> Exception handled");
-        try {
-            list1.shift(-7);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        list1.print();
 
         System.out.println("\n______________ insertList() Test ______________");
+        
         System.out.println("Creating Sample Linked List\n");
         list1.removeEnd();
         list1.removeEnd();
@@ -622,8 +625,8 @@ public class GenLinkedList<T extends Comparable<T>>{
         list1.insertList(list2, 0);
         list1.print();
 
-        System.out.println("\nTest #2:\nInsert List 3 at pos 7 in List 1. (End of the linked list insert test)");
-        list1.insertList(list3, 7);
+        System.out.println("\nTest #2:\nInsert List 3 at pos 2 in List 1. (End of the linked list insert test)");
+        list1.insertList(list3, 5);
         list1.print();
 
         System.out.println("\nTest #3:\nInsert List 4 at pos 4 in List 1. (Middle of the linked list insert test)");
