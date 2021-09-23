@@ -1,4 +1,4 @@
-import java.util.List;
+
 
 public class GenLinkedList<T extends Comparable<T>>{
     public static class Node<T>{
@@ -168,7 +168,7 @@ public class GenLinkedList<T extends Comparable<T>>{
             }
         }
     }
-    private void shift_buffer(Node<T> head1, Node<T> head2, int counter){
+    private void shift_buffer(Node<T> head1, Node<T> head2, int counter) throws Exception {
         while (head2 != null && counter != getSize()) {  // traverse through the current linked list
             Node<T> deleteNode = getNodeAtPosition(counter); // get the current node to be deleted
             if (deleteNode != null) { // as long as the node is not null
@@ -197,7 +197,8 @@ public class GenLinkedList<T extends Comparable<T>>{
                     int counter = Math.abs(shiftVal); 
                     shift_buffer(head1, head2, counter); // pass the current head of the linked list, the finial head of the linked list and the shift amount 
                 }else{
-                    exception = "Shift val is out of bounds, too positive"; // invalid shift val
+                    exception = "Shift val is out of bounds, too positive." +
+                            "\nShift Val " + shiftVal + " , LL Size: " + getSize(); // invalid shift val
                 }
             } else if (shiftVal < 0) { // if you shift right
                 if(shiftVal > -1*getSize()) { // if the shift is within bounds
@@ -205,8 +206,11 @@ public class GenLinkedList<T extends Comparable<T>>{
                     Node<T> head1 = getNodeAtPosition(counter); // get the node at calculated position
                     shift_buffer(head1, head2, counter); // pass the current head of the linked list, the finial head of the linked list and the shift amount 
                 }else{
-                    exception = "Shift Val is out of bounds, too negative."; //invalid shift val
+                    exception = "Shift val is out of bounds, too negative." +
+                            "\nShift Val " + shiftVal + " , LL Size: " + getSize(); //invalid shift val
                 }
+            }else{
+                exception = "Shift Val cannot be 0. No Shift was performed.";
             }
             if (!exception.equals("")) {
                 throw new Exception(exception); // throw exception if needed
@@ -244,349 +248,391 @@ public class GenLinkedList<T extends Comparable<T>>{
     }
 
     /*********************************************************/
-    public void removeMatching(T payload){
+    public void removeMatching(T payload) throws Exception {
+        String exception = "";
          if(head != null){
-             Node<T> currentNode = head;
+             Node<T> currentNode = head; // traverse node
              Node<T> previousNode = null;
+             boolean found = false;
              while(currentNode != null){
-                 if(currentNode.getPayload() == payload){
-                     if(currentNode == head){
-                         head = head.getNext();
-                     }else if(previousNode != null){
-                         previousNode.setNext(currentNode.getNext());
+                 if(currentNode.getPayload() == payload){ // if payload was found 
+                     found = true;
+                     if(currentNode == head){ // if the current node is the head
+                         head = head.getNext(); // move the head to next node and delete current node
+                     }else if(previousNode != null){  
+                         previousNode.setNext(currentNode.getNext()); // set the previous node to point to the currentNode's next node, thus deleting currentNode
                      }
                  }else{
-                     previousNode = currentNode;
+                     previousNode = currentNode; // update 
                  }
-                 currentNode = currentNode.getNext();
+                 currentNode = currentNode.getNext(); // traverse
+             }
+             if(!found){
+                 exception = "Payload " + payload + " was not found in Linked List";
              }
          }
+         if(!exception.equals("")){
+             throw new Exception(exception);
+         }
+         
     }
     
     public void erase(int position, int limit) throws Exception {
         String exception = "";
         if(head != null){
-            if(getSize() > 0 && position < getSize() && position >= 0 && limit < getSize() && limit >= 0 && position != limit){
-                Node<T> currentNode = getNodeAtPosition(position); //pointing to the same address
-                Node<T> previousNode = getPreviousNodeAtPosition(position);
+            if(getSize() > 0 && position < getSize() && position >= 0 && limit < getSize() && limit > 0){ // check to see if all arguments are valid
+                Node<T> currentNode = getNodeAtPosition(position); // get the current node at position
+                Node<T> previousNode = getPreviousNodeAtPosition(position); // get previous node at position
                 int counter = 0;
-                if (currentNode != null) {
-                    while (currentNode != null && counter != limit) {
-                        if (currentNode == head) {
-                            head = head.getNext();
+                if (currentNode != null) {  // check if given node is not null
+                    while (currentNode != null && counter != limit) { // traverse until the current node is null or you have reached the delete limit has been reached
+                        if (currentNode == head) { 
+                            head = head.getNext(); // delete the currentNode if its the head
                         } else if (previousNode != null) {
-                            previousNode.setNext(currentNode.getNext());
+                            previousNode.setNext(currentNode.getNext()); // delete the currentNode if it's in the middle of the list
                         }
-                        previousNode = getPreviousNodeAtPosition(position);
-                        currentNode = currentNode.getNext(); 
-                        counter++;
+                        previousNode = getPreviousNodeAtPosition(position); // update the previous to maintain previous delete position
+                        currentNode = currentNode.getNext(); // traverse
+                        counter++; // update
                     }
                 }
-            }else if (limit >= getSize()){
+            }else if (limit >= getSize()){ // check to see if limit is too large
                 exception = "Limit index is too large." +
                         "\nMust be Limit < LL Size." +
                         "\nOut of Bounds Exception. Limit : " + limit + ", LL Size: " + getSize();
-            }else if (position == limit){
+            }else if (limit == 0){ // no erase is done since limit is 0
                 exception = "Erase cannot be performed due to invalid erase 0. Position : " + position + ", Limit: " + limit;
             }
             if(!exception.equals("")){
-                throw new Exception(exception);
+                throw new Exception(exception); // throw exception
             }
         }
     }
-    public void insertList(GenLinkedList<T> list, int position){
+    public void insertList(GenLinkedList<T> list, int position) throws Exception {
         String exception = "";
         if(head != null){
             if(position <= getSize() && position >= 0){
-                if(position == 0){
-                    Node<T> head2 = list.head;
-                    Node<T> temp = head2;
-                    while(head2.getNext() != null){
+                if(position == 0){ // add list to beginning of master list
+                    Node<T> head2 = list.head; // traverse node
+                    Node<T> temp = head2; // save head to update master head
+                    while(head2.getNext() != null){ // traverse to the end of list
                         head2 = head2.getNext();
                     }
-                    head2.setNext(head);
-                    head = temp;
+                    head2.setNext(head); // add the master list at the end of list
+                    head = temp; // update the master list head to to the temp saved
                     
                 }else if(position == getSize()){
-                    Node<T> currentNode = head;
-                    while(currentNode.getNext() != null){
+                    Node<T> currentNode = head; // traverse node
+                    while(currentNode.getNext() != null){ // traverse to tge end of the list
                         currentNode = currentNode.getNext();
                     }
-                    currentNode.setNext(list.head);
+                    currentNode.setNext(list.head); // add the list to the end of the master list
                 }else{
-                    Node<T> currentNode = head;
-                    Node<T> next = currentNode.getNext();
-                    int counter = 1;
-                    while(currentNode.getNext() != null && counter != position){
-                        currentNode = currentNode.getNext();
-                        counter++;
-                        if(next != null){
-                            next = currentNode.getNext();
+                    Node<T> currentNode = head; // traverse
+                    Node<T> next = currentNode.getNext(); // the next node after the currentNode. Used to link both ends of the list to the master list
+                    int counter = 1; 
+                    while(currentNode.getNext() != null && counter != position){ // traverse until you have reached the position
+                        currentNode = currentNode.getNext(); // traverse
+                        counter++; // update
+                        if(next != null){ //check if next is null
+                            next = currentNode.getNext(); // update the next node
                         }
                     }
-                    currentNode.setNext(list.head);
-                    currentNode = head;
-                    while(currentNode.getNext() != null){
+                    currentNode.setNext(list.head); // add the new list to the end of the master list. This will case part of the list to be de referenced from memory
+                    currentNode = head; // reset currentNode
+                    while(currentNode.getNext() != null){ // travel to the end of the list
                         currentNode = currentNode.getNext();
                     }
-                    currentNode.setNext(next);
+                    currentNode.setNext(next); // add the next node and the other chain of nodes to the end of the linked list, thus finishing the insert
                 }
+            }else if(position < 0){
+                exception = "Position is too negative, position is out of bounds." +
+                        "\nPosition: " + position + " , LL Size:" + getSize();
+            }else{
+                exception = "Position is too positive, position is out of bounds." +
+                        "\nPosition: " + position + " , LL Size:" + getSize();
             }
+        }
+        if(!exception.equals("")){
+            throw new Exception(exception); // throw exception if needed
         }
     }
 
     public static void main(String[] args) throws Exception {
-//        GenLinkedList<Integer> test = new GenLinkedList<>();
-//        System.out.println("Test is type Integer linked list.\n");
-//
-//        System.out.println("____________ addFront() and addEnd() Test ____________");
-//        test.print();
-//
-//        System.out.println("\nAdding to the front");
-//        test.addFront(1);
-//        test.print();
-//        test.addFront(2);
-//        test.print();
-//        test.addFront(1310);
-//        test.print();
-//        test.addFront(29029);
-//        test.print();
-//
-//        System.out.println("\nAdding to the end");
-//        test.addEnd(10);
-//        test.print();
-//        test.addEnd(20);
-//        test.print();
-//        test.addEnd(30);
-//        test.print();
-//        test.addEnd(40);
-//        test.print();
-//
-//        System.out.println("\n____________ removeFront() and removeEnd() Test ____________");
-//        test.print();
-//
-//        System.out.println("\nRemoving from Front");
-//        test.removeFront();
-//        test.print(); 
-//        test.removeFront();
-//        test.print();
-//
-//        System.out.println("\nRemoving from End");
-//        test.removeEnd();
-//        test.print(); 
-//        test.removeEnd();
-//        test.print();
-//
-//        System.out.println("\n____________ get() and set() Test ____________");
-//        test.print();
-//        System.out.println("\nGetting Node Payload");
-//        if(test.get(2) != null){
-//            System.out.println("Payload at position 2: " + test.get(2));
-//        }else{
-//            System.out.println("Required position is out of bounds.");
-//        }
-//
-//        System.out.println("\nGetting Node payload at index that is out of bounds");
-//        if(test.get(10) != null){
-//            System.out.println("Payload at position 2: " + test.get(2));
-//        }else{
-//            System.out.println("Required position is out of bounds.");
-//        }
-//        //Output: Required position is out of bounds.
-//        System.out.println("\nSetting Node Payload");
-//        test.set(2,99);
-//        test.print();
-//        test.set(1,420);
-//        test.print(); //Output: Current Linked List: 56 420 99 20
-//
-//        System.out.println("\n____________ Swap Test ____________");
-//
-//        try{
-//            test.print();
-//            System.out.println("\nSwap Nodes 2 and 0");     // pos1 > pos2 test case
-//            test.swap(2,0);
-//            test.print();
-//
-//            System.out.println("\nSwap Nodes 1 and 2");     // base case
-//            test.swap(1,2);
-//            test.print();
-//
-//            System.out.println("\nSwap Nodes 1 and 3");     // swap middle node and last node
-//            test.swap(1,3);
-//            test.print();
-//
-//            System.out.println("\nSwap Nodes 0 and 2");     // swap head and middle node
-//            test.swap(0,2);
-//            test.print();
-//
-//            System.out.println("\nSwap Nodes 0 and 3");     // swap head and last node
-//            test.swap(0,3);
-//            test.print();
-//
-//            System.out.println("\nSwap Same Position Exception");     // Exception sample test case
-//            test.swap(0,0);
-//        }catch(Exception e){
-//            System.out.println(e.getMessage());
-//        }
-//        test.print();
+        GenLinkedList<Integer> test = new GenLinkedList<>();
+        System.out.println("____________ addFront() and addEnd() Test ____________");
+        test.print();
+
+        System.out.println("\nTest #1:\nAdding to the front");
+        test.addFront(1);
+        test.print();
+        test.addFront(2);
+        test.print();
+        test.addFront(1310);
+        test.print();
+        test.addFront(29029);
+        test.print();
+
+        System.out.println("\nTest #2:\nAdding to the end");
+        test.addEnd(10);
+        test.print();
+        test.addEnd(20);
+        test.print();
+        test.addEnd(30);
+        test.print();
+        test.addEnd(40);
+        test.print();
+
+        System.out.println("\n____________ removeFront() and removeEnd() Test ____________");
+        test.print();
+
+        System.out.println("\nTest #1:\nRemoving from Front");
+        test.removeFront();
+        test.print(); 
+        test.removeFront();
+        test.print();
+
+        System.out.println("\nTest #2:\nRemoving from End");
+        test.removeEnd();
+        test.print(); 
+        test.removeEnd();
+        test.print();
+
+        System.out.println("\n____________ get() and set() Test ____________");
+        test.print();
+        System.out.println("\nTest #1:\nGetting Node Payload");
+        if(test.get(2) != null){
+            System.out.println("Payload at position 2: " + test.get(2));
+        }else{
+            System.out.println("Required position is out of bounds.");
+        }
+
+        System.out.println("\nTest #2:\nGetting Node payload at index that is out of bounds");
+        if(test.get(10) != null){
+            System.out.println("Payload at position 2: " + test.get(2));
+        }else{
+            System.out.println("Required position is out of bounds.");
+        }
+        //Output: Required position is out of bounds.
+        System.out.println("\nTest #1:\nSetting Node Payload at pos 2 to 99");
+        test.set(2,99);
+        test.print();
+        System.out.println("\nTest #2:\nSetting Node Payload at pos 1 to 420");
+        test.set(1,420);
+        test.print(); //Output: Current Linked List: 56 420 99 20
+
+        System.out.println("\n____________ Swap Test ____________");
+
+        try{
+            test.print();
+            System.out.println("\nTest #1:\nSwap Nodes index 2 and 0");     // pos1 > pos2 test case
+            test.swap(2,0);
+            test.print();
+
+            System.out.println("\nTest #2:\nSwap Nodes index 1 and 2");     // base case
+            test.swap(1,2);
+            test.print();
+
+            System.out.println("\nTest #3:\nSwap Nodes index 1 and 3");     // swap middle node and last node
+            test.swap(1,3);
+            test.print();
+
+            System.out.println("\nTest #4:\nSwap Nodes index 0 and 2");     // swap head and middle node
+            test.swap(0,2);
+            test.print();
+
+            System.out.println("\nTest #5:\nSwap Nodes index 0 and 3");     // swap head and last node
+            test.swap(0,3);
+            test.print();
+
+            System.out.println("\nTest #6:\nSwap Same Position Exception. Swap Nodes index 0 and 0");     // Exception sample test case
+            test.swap(0,0);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        test.print();
 
         System.out.println("\n____________ removeMatching() Test ____________");
-        GenLinkedList<String> test1 = new GenLinkedList<>();
+        GenLinkedList<String> list1 = new GenLinkedList<>();
         System.out.println("Test 1 is type String linked list.");
         
         //creating new Linked List
+        System.out.println("Creating List 1:");
+        list1.addEnd("10");
+        list1.addEnd("20");
+        list1.addEnd("30");
+        list1.addEnd("20");
+        list1.addEnd("40");
+        list1.addEnd("20");
+        list1.print();
         
-        test1.addEnd("10");
-        test1.addEnd("20");
-        test1.addEnd("30");
-        test1.addEnd("20");
-        test1.addEnd("40");
-        test1.addEnd("20");
-        test1.print();
+        System.out.println("\nTest #1:\nMore than 1 delete.\nDelete 20.");
+        list1.removeMatching("20");
+        list1.print();
         
-        System.out.println("\nMore than 1 delete");
-        test1.removeMatching("20");
-        test1.print();
-        
-        System.out.println("\n1 delete");
-        test1.removeMatching("40"); 
-        test1.print();
+        System.out.println("\nTest #2:\n1 delete.\nDelete 40.");
+        list1.removeMatching("40"); 
+        list1.print();
 
-        System.out.println("\nRemoving payload that does not exist");
-        test1.removeMatching("99");
-        test1.print();
+        System.out.println("\nTest #3:\nRemoving payload that does not exist.\nDelete 99.");
+        try {
+            list1.removeMatching("99");   
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        list1.print();
 
         System.out.println("\n____________ erase() Test ____________");
-        test1.addFront("Bob");
-        test1.addFront("Jack");
-        test1.addFront("C");
-        test1.addFront("32");
-        test1.addFront("Henry");
-        test1.addFront("David");
-        test1.print();
+        list1.addFront("Bob");
+        list1.addFront("Jack");
+        list1.addFront("C");
+        list1.addFront("32");
+        list1.addFront("Henry");
+        list1.addFront("David");
+        list1.print();
 
-        System.out.println();
-        test1.erase(1,3);
-        test1.print();
+        System.out.println("\nTest #1\nErase 3 nodes at pos 1");
+        list1.erase(1,3);
+        list1.print();
 
-        System.out.println();
-        test1.erase(3,4);
-        test1.print();
+        System.out.println("\nTest #2\nErase 4 nodes at pos 3");
+        list1.erase(3,4);
+        list1.print();
+
+        System.out.println("\nTest #3\nErase 0 nodes at pos 2 -> Exception handled");
         try {
-            System.out.println("\nErasing from position 0 to limit 0");
-            test1.erase(2, 2); //This will give me an Exception
+            list1.erase(2, 0); //This will give me an Exception
         }catch(Exception e){
             System.out.println(e.getMessage());
         }finally {
-            test1.print();
+            list1.print();
         }
-        
+
+        System.out.println("\nTest #4\nErasing from position 2 to limit 100 -> Exception handled"); 
         try{
-            System.out.println("\nErasing from position 2 to limit 100"); //
-            test1.erase(2,100); // This will give me an Exception
+            list1.erase(2,100); // This will give me an Exception
         }catch(Exception e){
             System.out.println(e.getMessage());
         }finally {
-            test1.print();
+            list1.print();
         }
         
 
         System.out.println("\n____________ shift () Test ____________");
-        test1.removeFront();
-        test1.removeFront();
-        test1.removeFront();
+        list1.removeFront();
+        list1.removeFront();
+        list1.removeFront();
 
-        test1.addEnd("A");
-        test1.addEnd("B");
-        test1.addEnd("C");
-        test1.addEnd("D");
-        test1.addEnd("E");
-        test1.addEnd("F");
-        test1.print();
+        list1.addEnd("A");
+        list1.addEnd("B");
+        list1.addEnd("C");
+        list1.addEnd("D");
+        list1.addEnd("E");
+        list1.addEnd("F");
+        list1.print();
         
-        System.out.println("\nShift + 3 (left)");
-        test1.shift(3);
-        test1.print();
-        System.out.println("\nShift + 5 (left)");
-        test1.shift(5);
-        test1.print();
-        System.out.println("\nShift + 2 (left)");
-        test1.shift(2);
-        test1.print();
-        System.out.println("\nShift + 2 (left)");
-        test1.shift(1);
-        test1.print();
-
-        System.out.println("\nShift 0");
+        System.out.println("\nTest #1:\nShift + 5 (left)");
+        list1.shift(5);
+        list1.print();
+        
+        System.out.println("\nTest #2:\nShift + 2 (left)");
+        list1.shift(2);
+        list1.print();
+        
+        System.out.println("\nTest #3:\nShift + 6 (left) -> Exception handled");
         try {
-            test1.shift(0);
+            list1.shift(6);
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
-        test1.print();
+        list1.print();
 
+        System.out.println("\nTest #4:\nShift 0 -> Exception handled");
+        try {
+            list1.shift(0);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        list1.print();
 
-        System.out.println("\nShift -3 (right)");
-        test1.addEnd("G");
+        list1.addEnd("G");
+        System.out.println("\nAdded Payload G to Linked List 1");
+
+        System.out.println("\nTest #5:\nShift -3 (right)");
         
-        test1.shift(-3);
-        test1.print();
+        list1.shift(-3);
+        list1.print();
 
-        System.out.println("\nShift -5 (right)");
-        test1.shift(-5);
-        test1.print();
+        System.out.println("\nTest #6:\nShift -5 (right)");
+        list1.shift(-5);
+        list1.print();
 
-        System.out.println("\n____________ insertList() Test ____________");
-        System.out.println("Creating Sample Linked List");
-        test1.removeEnd();
-        test1.removeEnd();
-        test1.removeEnd();
-        test1.removeEnd();
+        System.out.println("\nTest #7:\nShift -7 (left) -> Exception handled");
+        try {
+            list1.shift(-7);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        list1.print();
+
+        System.out.println("\n______________ insertList() Test ______________");
+        System.out.println("Creating Sample Linked List\n");
+        list1.removeEnd();
+        list1.removeEnd();
+        list1.removeEnd();
+        list1.removeEnd();
         System.out.println("Linked List 1 (Shorted With Deletes):");
-        test1.print();
+        list1.print();
 
-        System.out.println("List 2:");
-        GenLinkedList<String> test2 = new GenLinkedList<>();
-        test2.addEnd("Bob");
-        test2.addEnd("Tom");
-        test2.addEnd("David");
-        test2.addEnd("Jack");
-        test2.print();
+        System.out.println("\nList 2:");
+        GenLinkedList<String> list2 = new GenLinkedList<>();
+        list2.addEnd("Bob");
+        list2.addEnd("Tom");
+        list2.addEnd("David");
+        list2.addEnd("Jack");
+        list2.print();
 
-        System.out.println("List 3:");
-        GenLinkedList<String> test3 = new GenLinkedList<>();
-        test3.addEnd("1");
-        test3.addEnd("2");
-        test3.addEnd("3");
-        test3.addEnd("4");
-        test3.print();
+        System.out.println("\nList 3:");
+        GenLinkedList<String> list3 = new GenLinkedList<>();
+        list3.addEnd("1");
+        list3.addEnd("2");
+        list3.addEnd("3");
+        list3.addEnd("4");
+        list3.print();
 
-        System.out.println("List 4:");
-        GenLinkedList<String> test4 = new GenLinkedList<>();
-        test4.addEnd("Hello");
-        test4.addEnd("To");
-        test4.addEnd("My");
-        test4.addEnd("Grader");
-        test4.addEnd("Bob");
-        test4.print();
+        System.out.println("\nList 4:");
+        GenLinkedList<String> list4 = new GenLinkedList<>();
+        list4.addEnd("Hello");
+        list4.addEnd("To");
+        list4.addEnd("My");
+        list4.addEnd("Grader");
+        list4.addEnd("Bob");
+        list4.print();
 
-        System.out.println("List 5:");
-        GenLinkedList<String> test5 = new GenLinkedList<>();
-        test5.addEnd("Bob");
-        test5.print();
+        System.out.println("\nList 5:");
+        GenLinkedList<String> list5 = new GenLinkedList<>();
+        list5.addEnd("Bob");
+        list5.print();
 
 
-        System.out.println("\nInsert List 2 at pos 0 in List 1. (Beginning of the linked list insert test)");
-        test1.insertList(test2, 0);
-        test1.print();
+        System.out.println("\nTest #1:\nInsert List 2 at pos 0 in List 1. (Beginning of the linked list insert test)");
+        list1.insertList(list2, 0);
+        list1.print();
 
-        System.out.println("\nInsert List 3 at pos 7 in List 1. (End of the linked list insert test)");
-        test1.insertList(test3, 7);
-        test1.print();
+        System.out.println("\nTest #2:\nInsert List 3 at pos 7 in List 1. (End of the linked list insert test)");
+        list1.insertList(list3, 7);
+        list1.print();
 
-        System.out.println("\nInsert List 5 at pos 4 in List 1. (Middle of the linked list insert test)");
-        test1.insertList(test4, 4);
-        test1.print();
+        System.out.println("\nTest #3:\nInsert List 4 at pos 4 in List 1. (Middle of the linked list insert test)");
+        list1.insertList(list4, 4);
+        list1.print();
+
+        System.out.println("\nTest #4:\nInsert List 5 at pos 100 in List 1. (Out of bounds exception test)");
+        try {
+            list1.insertList(list5, 100);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
         
     }
 }
