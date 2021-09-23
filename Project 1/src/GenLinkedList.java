@@ -1,4 +1,7 @@
-
+//Name: Varun Poondi
+//Net-ID: VMP190003
+//Prof: Greg Ozbrin
+//Date: 9/23/2021
 
 public class GenLinkedList<T extends Comparable<T>>{
     public static class Node<T>{
