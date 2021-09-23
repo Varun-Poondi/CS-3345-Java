@@ -53,14 +53,14 @@ public class GenLinkedList<T extends Comparable<T>>{
     }
     public void removeEnd() {
         if (head != null) {
-            Node<T> currentNode = head; //traverser
+            Node<T> currentNode = head; //travers node
             Node<T> previousNode = null; //saves the previous node of currentNode
             while (currentNode.getNext() != null) {
                 previousNode = currentNode; //save currentNode
-                currentNode = currentNode.getNext(); //travere
+                currentNode = currentNode.getNext(); //traverse
             }
-            if (previousNode != null) { //make sure the previoys is null, would never be the case
-                previousNode.setNext(currentNode.getNext()); // set the preivous node to point to currentNode's next node
+            if (previousNode != null) { //make sure the previous is null, would never be the case
+                previousNode.setNext(currentNode.getNext()); // set the previous node to point to currentNode's next node
             }
         }
     }
@@ -87,7 +87,7 @@ public class GenLinkedList<T extends Comparable<T>>{
         }
         return null;
     }
-    private Node<T> getPreviousNodeAtPosition(int pos){ //same code as getNodeAtPosition() except we are returning the preious node of the currentNode
+    private Node<T> getPreviousNodeAtPosition(int pos){ //same code as getNodeAtPosition() except we are returning the previous node of the currentNode
         if(head != null){
             int counter = 0;
             Node<T> previous = null;
@@ -102,7 +102,8 @@ public class GenLinkedList<T extends Comparable<T>>{
         return null;
     }
     
-    public void set(int position, T payload){
+    public void set(int position, T payload) throws Exception {
+        String exception = "";
         if (head != null) {
             if (position < getSize() && position >= 0) { //bounds check
                 int counter = 0;
@@ -114,8 +115,11 @@ public class GenLinkedList<T extends Comparable<T>>{
                 currentNode.setPayload(payload); //at the current node, set the payload with the given payload
                 
             }else{
-                System.out.println("Required position is out of bounds.");
+                exception = "Required position is out of bounds";
             }
+        }
+        if(!exception.equals("")){
+            throw new Exception(exception);
         }
     }
     
@@ -165,77 +169,78 @@ public class GenLinkedList<T extends Comparable<T>>{
         }
     }
     private void shift_buffer(Node<T> head1, Node<T> head2, int counter){
-        while (head2 != null && counter != getSize()) {
-            Node<T> deleteNode = getNodeAtPosition(counter);
-            if (deleteNode != null) {
-                removeMatching(deleteNode.getPayload());
+        while (head2 != null && counter != getSize()) {  // traverse through the current linked list
+            Node<T> deleteNode = getNodeAtPosition(counter); // get the current node to be deleted
+            if (deleteNode != null) { // as long as the node is not null
+                removeMatching(deleteNode.getPayload()); // delete it from the master linked list
             }
-            head2 = head2.getNext();
+            head2 = head2.getNext(); // traverse
         }
-        head2 = head;
-        if (head1 != null) {
-            Node<T> temp = head1;
-            while (head1.getNext() != null) {
+        // at this point we have removed the values that are need to be shifted. head2 will now be in front of head1
+        head2 = head; // reset the head
+        if (head1 != null) { //check if the head is null
+            Node<T> temp = head1; // temp will be used to make head1 the official head of the master linked list.
+            while (head1.getNext() != null) { // traverse to end of head1 linked list
                 head1 = head1.getNext();
             }
-            head1.setNext(head2);
-            head = temp;
+            head1.setNext(head2); // at the end of the chained nodes, set head1's next pointer to head2. All nodes are now in the desired position and the shift is complete
+            head = temp; // set the temp as the official head of the master linked list
         }
     }
     public void shift(int shiftVal) throws Exception {
         String exception = "";
         if(head != null) {
             Node<T> head2 = head;
-            if (shiftVal > 0) {
-                if(shiftVal < getSize()) {
-                    Node<T> head1 = getNodeAtPosition(shiftVal);
-                    int counter = Math.abs(shiftVal);
-                    shift_buffer(head1, head2, counter);
+            if (shiftVal > 0) { // if you shift left
+                if(shiftVal < getSize()) { // if the shift is within bounds
+                    Node<T> head1 = getNodeAtPosition(shiftVal); //get the node at the shift val. Assign as head1 because that is where the linked list will now start from
+                    int counter = Math.abs(shiftVal); 
+                    shift_buffer(head1, head2, counter); // pass the current head of the linked list, the finial head of the linked list and the shift amount 
                 }else{
-                    exception = "Shift val is out of bounds, too positive";
+                    exception = "Shift val is out of bounds, too positive"; // invalid shift val
                 }
-            } else if (shiftVal < 0) {
-                if(shiftVal > -1*getSize()) {
-                    int counter = getSize() - Math.abs(shiftVal);
-                    Node<T> head1 = getNodeAtPosition(counter);
-                    shift_buffer(head1, head2, counter);
+            } else if (shiftVal < 0) { // if you shift right
+                if(shiftVal > -1*getSize()) { // if the shift is within bounds
+                    int counter = getSize() - Math.abs(shiftVal); // counter = Current size of linked list - abs(shift_val). This will give us the correct position of the new head
+                    Node<T> head1 = getNodeAtPosition(counter); // get the node at calculated position
+                    shift_buffer(head1, head2, counter); // pass the current head of the linked list, the finial head of the linked list and the shift amount 
                 }else{
-                    exception = "Shift Val is out of bounds, too negative.";
+                    exception = "Shift Val is out of bounds, too negative."; //invalid shift val
                 }
             }
             if (!exception.equals("")) {
-                throw new Exception(exception);
+                throw new Exception(exception); // throw exception if needed
             }
         }
     }
         
         //??
-    public void print(){
+    public void print(){ // public print
         if(getSize() != 0) {
             System.out.print("Current Linked List: ");
-            printList(head);
+            printList(head); // pass head into recursive print
             System.out.println();
         }else{
             System.out.println("Linked List is Currently Empty.");
         }
     }
     private void printList(Node<T> node){
-        if(node != null){
-            System.out.print(node.getPayload() + " ");
-            printList(node.getNext());
+        if(node != null){ // check if the current node does not equal null
+            System.out.print(node.getPayload() + " ");  // print the payload in the current node
+            printList(node.getNext()); // pass in the next node
         }
     }
     public int getSize(){
         if(head != null) {
             int size = 0;
             Node<T> currentNode = head;
-            while(currentNode != null){
+            while(currentNode != null){ // traverse through linked list
                 currentNode = currentNode.getNext();
-                size ++;
+                size ++; // add the number of nodes
             }
-            return size;
+            return size; // return the current size of the linked list
         }
-        return 0;
+        return 0; // return 0 if the linked list is empty
     }
 
     /*********************************************************/
@@ -289,18 +294,54 @@ public class GenLinkedList<T extends Comparable<T>>{
             }
         }
     }
-    public void insertList(List<T> list, int position){
-        
-        
+    public void insertList(GenLinkedList<T> list, int position){
+        String exception = "";
+        if(head != null){
+            if(position <= getSize() && position >= 0){
+                if(position == 0){
+                    Node<T> head2 = list.head;
+                    Node<T> temp = head2;
+                    while(head2.getNext() != null){
+                        head2 = head2.getNext();
+                    }
+                    head2.setNext(head);
+                    head = temp;
+                    
+                }else if(position == getSize()){
+                    Node<T> currentNode = head;
+                    while(currentNode.getNext() != null){
+                        currentNode = currentNode.getNext();
+                    }
+                    currentNode.setNext(list.head);
+                }else{
+                    Node<T> currentNode = head;
+                    Node<T> next = currentNode.getNext();
+                    int counter = 1;
+                    while(currentNode.getNext() != null && counter != position){
+                        currentNode = currentNode.getNext();
+                        counter++;
+                        if(next != null){
+                            next = currentNode.getNext();
+                        }
+                    }
+                    currentNode.setNext(list.head);
+                    currentNode = head;
+                    while(currentNode.getNext() != null){
+                        currentNode = currentNode.getNext();
+                    }
+                    currentNode.setNext(next);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) throws Exception {
 //        GenLinkedList<Integer> test = new GenLinkedList<>();
 //        System.out.println("Test is type Integer linked list.\n");
-//        
+//
 //        System.out.println("____________ addFront() and addEnd() Test ____________");
 //        test.print();
-//        
+//
 //        System.out.println("\nAdding to the front");
 //        test.addFront(1);
 //        test.print();
@@ -310,7 +351,7 @@ public class GenLinkedList<T extends Comparable<T>>{
 //        test.print();
 //        test.addFront(29029);
 //        test.print();
-//        
+//
 //        System.out.println("\nAdding to the end");
 //        test.addEnd(10);
 //        test.print();
@@ -357,9 +398,9 @@ public class GenLinkedList<T extends Comparable<T>>{
 //        test.print();
 //        test.set(1,420);
 //        test.print(); //Output: Current Linked List: 56 420 99 20
-//        
+//
 //        System.out.println("\n____________ Swap Test ____________");
-//        
+//
 //        try{
 //            test.print();
 //            System.out.println("\nSwap Nodes 2 and 0");     // pos1 > pos2 test case
@@ -381,7 +422,7 @@ public class GenLinkedList<T extends Comparable<T>>{
 //            System.out.println("\nSwap Nodes 0 and 3");     // swap head and last node
 //            test.swap(0,3);
 //            test.print();
-//            
+//
 //            System.out.println("\nSwap Same Position Exception");     // Exception sample test case
 //            test.swap(0,0);
 //        }catch(Exception e){
@@ -493,6 +534,58 @@ public class GenLinkedList<T extends Comparable<T>>{
 
         System.out.println("\nShift -5 (right)");
         test1.shift(-5);
+        test1.print();
+
+        System.out.println("\n____________ insertList() Test ____________");
+        System.out.println("Creating Sample Linked List");
+        test1.removeEnd();
+        test1.removeEnd();
+        test1.removeEnd();
+        test1.removeEnd();
+        System.out.println("Linked List 1 (Shorted With Deletes):");
+        test1.print();
+
+        System.out.println("List 2:");
+        GenLinkedList<String> test2 = new GenLinkedList<>();
+        test2.addEnd("Bob");
+        test2.addEnd("Tom");
+        test2.addEnd("David");
+        test2.addEnd("Jack");
+        test2.print();
+
+        System.out.println("List 3:");
+        GenLinkedList<String> test3 = new GenLinkedList<>();
+        test3.addEnd("1");
+        test3.addEnd("2");
+        test3.addEnd("3");
+        test3.addEnd("4");
+        test3.print();
+
+        System.out.println("List 4:");
+        GenLinkedList<String> test4 = new GenLinkedList<>();
+        test4.addEnd("Hello");
+        test4.addEnd("To");
+        test4.addEnd("My");
+        test4.addEnd("Grader");
+        test4.addEnd("Bob");
+        test4.print();
+
+        System.out.println("List 5:");
+        GenLinkedList<String> test5 = new GenLinkedList<>();
+        test5.addEnd("Bob");
+        test5.print();
+
+
+        System.out.println("\nInsert List 2 at pos 0 in List 1. (Beginning of the linked list insert test)");
+        test1.insertList(test2, 0);
+        test1.print();
+
+        System.out.println("\nInsert List 3 at pos 7 in List 1. (End of the linked list insert test)");
+        test1.insertList(test3, 7);
+        test1.print();
+
+        System.out.println("\nInsert List 5 at pos 4 in List 1. (Middle of the linked list insert test)");
+        test1.insertList(test4, 4);
         test1.print();
         
     }
