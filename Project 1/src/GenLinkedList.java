@@ -66,16 +66,11 @@ public class GenLinkedList<T extends Comparable<T>>{
     }
     public void removeEnd() throws Exception {
         if (head != null) {
-            Node<T> currentNode = head; //travers node
-            Node<T> previousNode = null; //saves the previous node of currentNode
             if (head == tail) { //if there is only one node in LL, set the head and tail as null
                 head = null;
                 tail = null;
             } else {
-                while (currentNode.getNext() != null) { //traverse the LL to get the previous node of the last node
-                    previousNode = currentNode; //save currentNode
-                    currentNode = currentNode.getNext(); //traverse
-                }
+                Node<T> previousNode = getPreviousNodeAtPosition(getSize()-1); //get the previous node of tail
                 //make sure the previous is null, would never be the case
                 if (previousNode != null) { // check if the previous node is not null
                     previousNode.setNext(tail.getNext()); // set the previous node to point to currentNode's next node
@@ -130,14 +125,10 @@ public class GenLinkedList<T extends Comparable<T>>{
         String exception = "";
         if (head != null) {
             if (position < getSize() && position >= 0) { //bounds check
-                int counter = 0;
-                Node<T> currentNode = head; //traverse node
-                while (currentNode.getNext() != null && counter != position) { //traverse until we have reached desire position
-                    counter++;
-                    currentNode = currentNode.getNext();
+                Node<T> currentNode = getNodeAtPosition(position);
+                if(currentNode != null) {
+                    currentNode.setPayload(payload); //at the current node, set the payload with the given payload
                 }
-                currentNode.setPayload(payload); //at the current node, set the payload with the given payload
-                
             }else{
                 exception = "Required position is out of bounds";
             }
