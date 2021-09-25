@@ -360,11 +360,11 @@ public class GenLinkedList<T extends Comparable<T>>{
                     tail.setNext(list.head); // set the master list's tail to point next to the list's head
                     tail = list.tail; //update the tail
                 }else{
-                    Node<T> currentNode = getNodeAtPosition(position);
-                    Node<T> previousNode = getPreviousNodeAtPosition(position);
+                    Node<T> currentNode = getNodeAtPosition(position); // get node at position
+                    Node<T> previousNode = getPreviousNodeAtPosition(position); // get previous node at position
                     if(previousNode != null && currentNode != null) {
-                        previousNode.setNext(list.head);
-                        list.tail.setNext(currentNode);
+                        previousNode.setNext(list.head); // set the previous not to point to the head of the insert list
+                        list.tail.setNext(currentNode); // set the the tail node to point next to the current node.
                     }
                 }
             }else if(position < 0){
