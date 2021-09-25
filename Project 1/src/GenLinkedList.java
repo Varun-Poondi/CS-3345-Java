@@ -54,7 +54,7 @@ public class GenLinkedList<T extends Comparable<T>>{
             tail = newNode; // set the new node as the tail
         }
     }
-    public void removeFront(){
+    public void removeFront() throws Exception {
         if(head != null){
             if(head == tail){ //if there is only one node in LL, set the head and tail as null
                 head = null; 
@@ -62,6 +62,8 @@ public class GenLinkedList<T extends Comparable<T>>{
             }else{
                 head = head.getNext(); // move the head to the next node
             }
+        }else{
+            throw new Exception("LL is empty");
         }
     }
     public void removeEnd() throws Exception {
@@ -77,6 +79,8 @@ public class GenLinkedList<T extends Comparable<T>>{
                     tail = previousNode; //update tail
                 }
             }
+        }else{
+            throw new Exception("LL is empty");   
         }
     }
     public T get(int position){
@@ -125,12 +129,12 @@ public class GenLinkedList<T extends Comparable<T>>{
         String exception = "";
         if (head != null) {
             if (position < getSize() && position >= 0) { //bounds check
-                Node<T> currentNode = getNodeAtPosition(position);
+                Node<T> currentNode = getNodeAtPosition(position); //get the current Node at the position
                 if(currentNode != null) {
                     currentNode.setPayload(payload); //at the current node, set the payload with the given payload
                 }
             }else{
-                exception = "Required position is out of bounds";
+                exception = "Required position is out of bounds"; 
             }
         }
         if(!exception.equals("")){
@@ -313,21 +317,24 @@ public class GenLinkedList<T extends Comparable<T>>{
             if(getSize() > 0 && position < getSize() && position >= 0 && limit < getSize() && limit > 0){ // check to see if all arguments are valid
                 Node<T> currentNode = getNodeAtPosition(position); // get the current node at position
                 Node<T> previousNode = getPreviousNodeAtPosition(position); // get previous node at position
-                int counter = 0;
-                if (currentNode != null) {  // check if given node is not null
-                    while (currentNode != null && counter != limit) { // traverse until the current node is null or you have reached the delete limit has been reached
-                        if (currentNode == head) { 
-                            head = head.getNext(); // delete the currentNode if its the head
-                        } else if (previousNode != null) {
-                            if(currentNode == tail){
-                                tail = previousNode;
-                            }
-                            previousNode.setNext(currentNode.getNext()); // delete the currentNode if it's in the middle of the list
-                        }
-                        previousNode = getPreviousNodeAtPosition(position); // update the previous to maintain previous delete position
-                        currentNode = currentNode.getNext(); // traverse
-                        counter++; // update
-                    }
+                Node<T> limitNode;
+                int limitIndex = position + limit - 1; // calculate the limitNode position 
+                if(limitIndex >= getSize()){ // id the limit node is out of bounds, we know that we need to delete till we reach the tail
+                    limitNode = tail; // set as the tail
+                }else{
+                    limitNode = getNodeAtPosition(limitIndex); // get the node at the limitIndex
+                }
+                
+                if(currentNode == head && limitNode != tail && limitNode != null){ // when the start position is at the head and end position is in the middle of the list
+                    head = limitNode.getNext();
+                }else if (currentNode == head && limitNode == tail) { // when we want to delete the entire list
+                    head = null;
+                    tail = null;
+                }else if(previousNode != null && limitNode == tail){ // when the start position is in the middle or the list and end position is at the tail of the list
+                    previousNode.setNext(null);
+                    tail = previousNode;
+                }else if(previousNode != null && limitNode != null){ // when the start and end position are in the middle of the list. 
+                    previousNode.setNext(limitNode.getNext());
                 }
             }else if (limit >= getSize()){ // check to see if limit is too large
                 exception = "Limit index is too large." +
@@ -346,38 +353,19 @@ public class GenLinkedList<T extends Comparable<T>>{
         if(head != null){
             if(position <= getSize() && position >= 0){
                 if(position == 0){ // add list to beginning of master list
-                    Node<T> head2 = list.head; // traverse node
-                    Node<T> temp = head2; // save head to update master head
-                    while(head2.getNext() != null){ // traverse to the end of list
-                        head2 = head2.getNext();
-                    }
-                    head2.setNext(head); // add the master list at the end of list
-                    head = temp; // update the master list head to to the temp saved
+                    list.tail.setNext(head); //set the list's tail to point next to the master list's head
+                    head = list.head; // update the head
                     
                 }else if(position == getSize()){
-                    Node<T> currentNode = head; // traverse node
-                    while(currentNode.getNext() != null){ // traverse to tge end of the list
-                        currentNode = currentNode.getNext();
-                    }
-                    currentNode.setNext(list.head); // add the list to the end of the master list
-                    tail = list.tail;
+                    tail.setNext(list.head); // set the master list's tail to point next to the list's head
+                    tail = list.tail; //update the tail
                 }else{
-                    Node<T> currentNode = head; // traverse
-                    Node<T> next = currentNode.getNext(); // the next node after the currentNode. Used to link both ends of the list to the master list
-                    int counter = 1; 
-                    while(currentNode.getNext() != null && counter != position){ // traverse until you have reached the position
-                        currentNode = currentNode.getNext(); // traverse
-                        counter++; // update
-                        if(next != null){ //check if next is null
-                            next = currentNode.getNext(); // update the next node
-                        }
+                    Node<T> currentNode = getNodeAtPosition(position);
+                    Node<T> previousNode = getPreviousNodeAtPosition(position);
+                    if(previousNode != null && currentNode != null) {
+                        previousNode.setNext(list.head);
+                        list.tail.setNext(currentNode);
                     }
-                    currentNode.setNext(list.head); // add the new list to the end of the master list. This will case part of the list to be de referenced from memory
-                    currentNode = head; // reset currentNode
-                    while(currentNode.getNext() != null){ // travel to the end of the list
-                        currentNode = currentNode.getNext();
-                    }
-                    currentNode.setNext(next); // add the next node and the other chain of nodes to the end of the linked list, thus finishing the insert
                 }
             }else if(position < 0){
                 exception = "Position is too negative, position is out of bounds." +
@@ -583,8 +571,8 @@ public class GenLinkedList<T extends Comparable<T>>{
         list1.addFront("David");
         list1.print();
 
-        System.out.println("\nTest #1\nErase 3 nodes at pos 1");
-        list1.erase(1,3);
+        System.out.println("\nTest #1\nErase 2 nodes at pos 0");
+        list1.erase(0,2);
         list1.print();
 
         System.out.println("\nTest #2\nErase 4 nodes at pos 3");

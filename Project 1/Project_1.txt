@@ -197,3 +197,198 @@ Submit to eLearning:
                                      }
                                  }
                              }
+/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home/bin/java -javaagent:/Applications/IntelliJ IDEA CE.app/Contents/lib/idea_rt.jar=51517:/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8 -classpath /Users/varunpoondi/Documents/UTD Freshman Year 2020-2021/Sophomore Year/CS 3345/Projects/CS-3345-Java/Project 1/out/production/Project 1 GenLinkedList
+____________ addFront() and addEnd() Test ____________
+Linked List is Currently Empty.
+
+Test #1:
+Adding to the front
+Current Linked List: 1 
+Current Linked List: 2 1 
+Current Linked List: 1310 2 1 
+Current Linked List: 29029 1310 2 1 
+
+Test #2:
+Adding to the end
+Current Linked List: 29029 1310 2 1 10 
+Current Linked List: 29029 1310 2 1 10 20 
+Current Linked List: 29029 1310 2 1 10 20 30 
+Current Linked List: 29029 1310 2 1 10 20 30 40 
+
+____________ removeFront() and removeEnd() Test ____________
+Current Linked List: 29029 1310 2 1 10 20 30 40 
+
+Test #1:
+Removing from Front
+Current Linked List: 1310 2 1 10 20 30 40 
+Current Linked List: 2 1 10 20 30 40 
+
+Test #2:
+Removing from End
+Current Linked List: 2 1 10 20 30 
+Current Linked List: 2 1 10 20 
+
+____________ get() and set() Test ____________
+Current Linked List: 2 1 10 20 
+
+Test #1:
+Getting Node Payload
+Payload at position 2: 10
+
+Test #2:
+Getting Node payload at index that is out of bounds. Get Node at pos 10
+Required position is out of bounds.
+
+Test #1:
+Setting Node Payload at pos 2 to 99
+Current Linked List: 2 1 99 20 
+
+Test #2:
+Setting Node Payload at pos 1 to 420
+Current Linked List: 2 420 99 20 
+
+____________ shift () Test ____________
+Current Linked List: 99 20 1 2 3 4 5 6 
+
+Test #1:
+Shift + 5 (left)
+Current Linked List: 4 5 6 99 20 1 2 3 
+
+Test #2:
+Shift + 2 (left)
+Current Linked List: 6 99 20 1 2 3 4 5 
+
+Test #3:
+Shift + 8 (left) -> Exception handled
+Shift val is out of bounds, too positive.
+Shift Val 8 , LL Size: 8
+Current Linked List: 6 99 20 1 2 3 4 5 
+
+Test #4:
+Shift 0 -> Exception handled
+Shift Val cannot be 0. No Shift was performed.
+Current Linked List: 6 99 20 1 2 3 4 5 
+
+Added Payload 7 to Linked List 1
+Current Linked List: 6 99 20 1 2 3 4 5 7 
+
+Test #5:
+Shift -3 (right)
+Current Linked List: 4 5 7 6 99 20 1 2 3 
+
+Test #6:
+Shift -5 (right)
+Current Linked List: 99 20 1 2 3 4 5 7 6 
+
+Test #7:
+Shift -9 (left) -> Exception handled
+Shift val is out of bounds, too negative.
+Shift Val -9 , LL Size: 9
+Current Linked List: 99 20 1 2 3 4 5 7 6 
+
+____________ Swap Test ____________
+Current Linked List: 99 20 1 2 3 4 5 7 6 
+
+Test #1:
+Swap Nodes index 2 and 0
+Current Linked List: 1 20 99 2 3 4 5 7 6 
+
+Test #2:
+Swap Nodes index 1 and 2
+Current Linked List: 1 99 20 2 3 4 5 7 6 
+
+Test #3:
+Swap Nodes index 1 and 3
+Current Linked List: 1 2 20 99 3 4 5 7 6 
+
+Test #4:
+Swap Nodes index 0 and 2
+Current Linked List: 20 2 1 99 3 4 5 7 6 
+
+Test #5:
+Swap Nodes index 0 and 8
+Current Linked List: 6 2 1 99 3 4 5 7 20 
+
+Test #6:
+Swap Same Position Exception. Swap Nodes index 0 and 0
+No swap performed since pos1 = pos2.
+Current Linked List: 6 2 1 99 3 4 5 7 20 
+
+____________ removeMatching() Test ____________
+Test 1 is type String linked list.
+Creating List 1:
+Current Linked List: 10 20 30 20 40 20 
+
+Test #1:
+More than 1 delete.
+Delete 20.
+Current Linked List: 10 30 40 
+
+Test #2:
+1 delete.
+Delete 40.
+Current Linked List: 10 30 
+
+Test #3:
+Removing payload that does not exist.
+Delete 99.
+Payload 99 was not found in Linked List
+Current Linked List: 10 30 
+
+____________ erase() Test ____________
+Current Linked List: David Henry 32 C Jack Bob 10 30 
+
+Test #1
+Erase 3 nodes at pos 1
+Current Linked List: David Jack Bob 10 30 
+
+Test #2
+Erase 4 nodes at pos 3
+Current Linked List: David Jack Bob 
+
+Test #3
+Erase 0 nodes at pos 2 -> Exception handled
+Erase cannot be performed due to invalid erase 0. Position : 2, Limit: 0
+Current Linked List: David Jack Bob 
+
+Test #4
+Erasing from position 2 to limit 100 -> Exception handled
+Limit index is too large.
+Must be Limit < LL Size.
+Out of Bounds Exception. Limit : 100, LL Size: 3
+Current Linked List: David Jack Bob 
+
+______________ insertList() Test ______________
+Linked List 1:
+Current Linked List: Z Y X 
+
+List 2:
+Current Linked List: Bob Tom David Jack 
+
+List 3:
+Current Linked List: 1 2 3 4 
+
+List 4:
+Current Linked List: Hello To My Grader Bob 
+
+List 5:
+Current Linked List: Bob 
+
+Test #1:
+Insert List 2 at pos 0 in List 1. (Beginning of the linked list insert test)
+Current Linked List: Bob Tom David Jack Z Y X 
+
+Test #2:
+Insert List 3 at pos 7 in List 1. (End of the linked list insert test)
+Current Linked List: Bob Tom David Jack Z Y X 1 2 3 4 
+
+Test #3:
+Insert List 4 at pos 4 in List 1. (Middle of the linked list insert test)
+Current Linked List: Bob Tom David Jack Hello To My Grader Bob Z Y X 1 2 3 4 
+
+Test #4:
+Insert List 5 at pos 100 in List 1. (Out of bounds exception test)
+Position is too positive, position is out of bounds.
+Position: 100 , LL Size:16
+
+                             
