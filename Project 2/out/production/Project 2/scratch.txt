@@ -1,0 +1,158 @@
+        BinarySearchTree<Integer> tree3 = new BinarySearchTree<>();
+        tree3.insert(100);
+        tree3.insert(150);
+        tree3.insert(50);
+        tree3.insert(52);
+        tree3.insert(40);
+        tree3.insert(45);
+        
+        
+        System.out.print("Tree 3: ");
+        tree3.printTree();
+        System.out.println();
+        
+        System.out.println("\nTree 3's current root: " + tree3.root.element);
+        System.out.println("Tree 3's current max node: " + tree3.findMax());
+        System.out.println("Single Right Rotation on Tree 3 (Element 100) ....");
+        System.out.println();
+        
+        tree3.rotateLeft(50);
+        System.out.print("Tree 3: ");
+        tree3.printTree();
+
+        System.out.println();
+        System.out.println("\nTree 3's current root: " + tree3.root.element);
+        System.out.println("Tree 3's current max node: " + tree3.findMax());
+        
+        
+        
+        
+        
+        
+                System.out.println("____________rotateRight____________");
+                BinarySearchTree<Integer> tree3 = new BinarySearchTree<>();
+                tree3.insert(180);
+                tree3.insert(190);
+                tree3.insert(166);
+                tree3.insert(163);
+                tree3.insert(172);
+                tree3.insert(175);
+                tree3.insert(200);
+                
+                
+                
+                /*
+                "Current Tree:                                                  
+                                        180
+                                       /   \
+                                    166     -----190
+                                   /   \            \
+                                163     172          200
+                                           \
+                                            175
+                
+                "*/
+                System.out.println("Tree 3 Head: " + tree3.root.element);
+                System.out.print("Tree 3: ");
+                tree3.printTree();
+                System.out.println("\n");
+                
+                tree3.rotateRight(180);
+                /*
+                Current Tree:
+                                          166
+                                         /   \
+                                      163     172
+                                               \
+                                                175
+                                                  \
+                                                   180
+                                                    \
+                                                     190
+                                                      \  
+                                                       200 
+                
+                */
+        
+                System.out.println("\nTree 3 Head: " + tree3.root.element);
+                System.out.print("Tree 3: ");
+                tree3.printTree();
+                System.out.println("\n");
+                
+                System.out.println("____________rotateLeft____________");
+                tree3.insert(174);
+                System.out.print("Tree 3: ");
+                tree3.printTree();
+                System.out.println();
+                
+                /*
+                Current Tree:
+                                          166                                       
+                                         /   \          
+                                      163     172
+                                               \
+                                                175   
+                                               /  \
+                                             174   180
+                                                    \
+                                                     190
+                                                      \  
+                                                       200 
+                
+                */
+                tree3.rotateLeft(175);
+                /*
+                Current Tree:
+                                          166
+                                         /   \
+                                      163     172
+                                               \
+                                                180
+                                               /  \
+                                             175  190
+                                            /       \
+                                         174        200
+                */
+                
+                System.out.print("\nTree 3: ");
+                tree3.printTree();
+                System.out.println();
+                
+        
+                System.out.println("\n_________Print Levels_________");
+                BinarySearchTree<Integer> tree4 = new BinarySearchTree<>();
+                tree4.insert(50);
+                tree4.insert(52);
+                tree4.insert(40);
+                tree4.insert(45);
+                tree4.insert(100);
+                tree4.insert(150);
+        
+                System.out.println("Tree 4:");
+                tree4.printTree();
+                System.out.println("\nTree 4's levels: ");
+                
+                tree4.printLevels();
+        
+                System.out.println();
+                
+                
+                
+                        System.out.println("____________Mirror and isMirror Test____________");
+                        tree1.insert(100);
+                        tree1.insert(150);
+                        tree1.insert(50);
+                        tree1.insert(40);
+                        tree1.insert(45);
+                
+                        System.out.print("Tree 1: ");
+                        tree1.printTree();
+                
+                        BinarySearchTree<Integer> tree2 = new BinarySearchTree<>( );
+                
+                        tree2.root = tree1.mirror();
+                        System.out.print("\nTree 2: ");
+                        tree2.printTree();
+                
+                
+                        System.out.println("\nTree #1 is a mirror of Tree #2: " + tree2.isMirror(tree1.root, tree2.root));

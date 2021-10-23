@@ -14,6 +14,9 @@
 // ******************ERRORS********************************
 // Throws UnderflowException as appropriate
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Implements an unbalanced binary search tree.
  * Note that all "matching" is based on the compareTo method.
@@ -106,6 +109,33 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
         else
             printTree( root );
     }
+    
+    public int nodeCount(){
+        return nodeCountHelper(root);
+    }
+
+    public boolean isFull(){
+        return isFullHelper(root);
+    }
+    
+    public boolean compareStructure(BinaryNode<AnyType> checkRoot){
+        return compareStructureHelper(root,checkRoot);
+    }
+    
+    public boolean equals(BinaryNode<AnyType> checkRoot){
+        return equalsHelper(root, checkRoot);
+    }
+    
+    public BinaryNode<AnyType> copy(){
+        return copyHelper(root);
+    }
+    
+    public BinaryNode<AnyType> mirror(){
+        BinaryNode<AnyType> mirrorRoot = new BinaryNode<>(root.element);
+        return mirrorHelper(root);
+    }
+    
+    
 
     /**
      * Internal method to insert into a subtree.
@@ -214,7 +244,7 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
         if( t != null )
         {
             printTree( t.left );
-            System.out.println( t.element );
+            System.out.print( t.element  + " ");
             printTree( t.right );
         }
     }
@@ -230,9 +260,7 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
         else
             return 1 + Math.max( height( t.left ), height( t.right ) );
     }
-    public void nodeCount(){
-        nodeCountHelper(root);
-    }
+
     
     private int nodeCountHelper(BinaryNode<AnyType> node){
         if(node == null){
@@ -241,44 +269,219 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
         return 1 + nodeCountHelper(node.left) + nodeCountHelper(node.right);
     }
     
-    private boolean isFull(BinaryNode<AnyType> node){
+
+    
+    
+    private boolean isFullHelper(BinaryNode<AnyType> node){
         if(node == null){
             return true;
         }
         if(node.left == null && node.right != null || node.left != null && node.right == null){
             return false;
         }
-        return isFull(node.left) && isFull(node.right);
+        return isFullHelper(node.left) && isFullHelper(node.right);
     }
     
-    public boolean compareStructure(){
+    private boolean compareStructureHelper(BinaryNode<AnyType> node1, BinaryNode<AnyType> node2){
+        // check if both roots are empty, base case
+        if(node1 == null && node2 == null){ 
+            return true;
+        }
+        // if in the middle or the bottom of the tree, and either node is null, return false, else continue to traverse
+        if (node1 != null && node2 != null){
+            return compareStructureHelper(node1.left, node2.left) && compareStructureHelper(node1.right, node2.right);
+        }
+        return false; // final case when one of the nodes are null
+   
+    }
+    private boolean equalsHelper(BinaryNode<AnyType> node1, BinaryNode<AnyType> node2){
+        // check if both roots are empty, base case
+        if(node1 == null && node2 == null){ 
+            return true;
+        }
+        // if in the middle or the bottom of the tree, and either node is null, return false, else continue to traverse
+        // must also check if both nodes at a certain spot have the same element
+        if (node1 != null && node2 != null && node1.element == node2.element){
+            return equalsHelper(node1.left, node2.left) && equalsHelper(node1.right, node2.right);
+        }
+        // final case when one of the nodes are null
         return false;
     }
-    public boolean equals(){
-        return false;
+    
+    private BinaryNode<AnyType> copyHelper(BinaryNode<AnyType> currentNode){
+        //base case check, return null, if the tree is empty or entered null node with leaf parent
+        if (currentNode != null) { 
+            //create new node
+            BinaryNode<AnyType> insertNode = new BinaryNode<>(currentNode.element);
+            //check if there is a left node available
+            if(currentNode.left != null) {
+                //recurse to get left child for insertNode
+                insertNode.left = copyHelper(currentNode.left);
+            }
+            //check if there is a right node available
+            if(currentNode.right != null) {
+                //recurse to get right child for insertNode
+                insertNode.right = copyHelper(currentNode.right);
+            }
+            //return new root
+            return insertNode;
+        }
+        return null; 
     }
-    public BinaryNode<AnyType> copy(){
+    private BinaryNode<AnyType> mirrorHelper(BinaryNode<AnyType> currentNode) {
+        if (currentNode != null) {
+            BinaryNode<AnyType> newNode = new BinaryNode<>(currentNode.element);
+            if (currentNode.right != null) {
+                newNode.left = mirrorHelper(currentNode.right);
+            }
+            if (currentNode.left != null) {
+                newNode.right = mirrorHelper(currentNode.left);
+            }
+
+            return newNode;
+        }
         return null;
     }
-    public BinaryNode<AnyType> mirror(){
-        return null;
-    }
-    public boolean isMirror(){
+    
+    public boolean isMirror(BinaryNode<AnyType> node1, BinaryNode<AnyType> node2){
+        // check if both node are null, base case to exit, or recurse back up stack 
+        if(node1 == null && node2 == null){
+            return true;
+        }
+        if(node1 != null && node2 != null && node1.element == node2.element){
+            return isMirror(node1.left, node2.right) && isMirror(node1.right, node2.left);
+        }
         return false;
     }
-    public void rotateLeft(){
-        
+//    
+    private BinaryNode<AnyType> searchNode(AnyType element, BinaryNode<AnyType> currentNode, BinaryNode<AnyType> parent){
+        int compareResult;
+        if(root != null){
+            compareResult = element.compareTo( currentNode.element );
+            if (compareResult < 0){ // move left
+                return searchNode(element, currentNode.left, parent);
+            }else if (compareResult > 0){
+                return searchNode(element, currentNode.right, parent);
+            }else{
+                return currentNode;
+            }
+        }
+        return null;
     }
-    public void rotateRight(){
-        
+    private BinaryNode<AnyType> parentNode(AnyType element, BinaryNode<AnyType> currentNode, BinaryNode<AnyType> parent){
+        int compareResult;
+        if(root != null){
+            compareResult = element.compareTo( currentNode.element );
+            if (compareResult < 0){ // move left
+                parent = currentNode;
+                return parentNode(element, currentNode.left, parent);
+            }else if (compareResult > 0){
+                parent = currentNode;
+                return parentNode(element, currentNode.right, parent);
+            }else{
+                return parent;
+            }
+        }
+        return null;
+    }
+    
+    
+    public void rotateRight(AnyType element){
+        //check if the tree is empty
+        if(root != null) {
+            System.out.println("Attempting to rotate element " + element + " right .....");
+            BinaryNode<AnyType> searchNode = searchNode(element, root, root);
+            BinaryNode<AnyType> parentNode = parentNode(element, root, root);
+            if(searchNode != null && searchNode == root && searchNode.left != null){
+                BinaryNode<AnyType> tree1 = searchNode.left;
+                searchNode.left = null;
+                BinaryNode<AnyType> insertPosition = findMax(tree1);
+                insertPosition.right = searchNode;
+                root = tree1;
+                System.out.println("Successful Rotation!");
+            }else if(searchNode != null && parentNode != null && searchNode.left != null){
+                BinaryNode<AnyType> tree1 = searchNode.left;
+                //BinaryNode<AnyType> temp = searchNode;
+                if(parentNode.left != null && element.compareTo(parentNode.left.element) == 0){ // check if the parentNode has searchNode on the left side 
+                    parentNode.left = tree1;
+                    BinaryNode<AnyType> insertPosition = findMax(tree1);
+                    searchNode.left = null;
+                    insertPosition.right = searchNode;
+                    System.out.println("Successful Rotation!");
+                }else if(parentNode.right != null && element.compareTo(parentNode.right.element) == 0){
+                    parentNode.right = tree1;
+                    BinaryNode<AnyType> insertPosition = findMin(tree1);
+                    searchNode.left = null;
+                    insertPosition.right = searchNode;
+                    System.out.println("Successful Rotation!");
+                }
+            }else{
+                System.out.println("Unable to rotate right.");
+            }
+        }else{
+            System.out.println("Tree is empty.");
+        }
+    }
+    
+    public void rotateLeft(AnyType element){
+        if(root != null) {
+            System.out.println("Attempting to rotate element " + element + " left .....");
+            BinaryNode<AnyType> searchNode = searchNode(element, root, root);
+            BinaryNode<AnyType> parentNode = parentNode(element, root, root);
+            if(searchNode != null && searchNode == root && searchNode.right != null){
+                BinaryNode<AnyType> tree1 = searchNode.right;
+                searchNode.right = null;
+                BinaryNode<AnyType> insertPosition = findMin(tree1);
+                insertPosition.left = searchNode;
+                root = tree1;
+                System.out.println("Successful Rotation!");
+            }else if(searchNode != null && parentNode != null && searchNode.right != null){
+                BinaryNode<AnyType> tree1 = searchNode.right;
+                if(parentNode.left != null && element.compareTo(parentNode.left.element) == 0){ // check if the parentNode has searchNode on the left side 
+                   parentNode.left = tree1;
+                   BinaryNode<AnyType> insertPosition = findMax(tree1);
+                   searchNode.right = null;
+                   insertPosition.left = searchNode;
+                   System.out.println("Successful Rotation!");
+                }else if(parentNode.right != null && element.compareTo(parentNode.right.element) == 0){
+                   parentNode.right = tree1;
+                   BinaryNode<AnyType> insertPosition = findMin(tree1);
+                   searchNode.right = null;
+                   insertPosition.left = searchNode;
+                   System.out.println("Successful Rotation!");
+                }
+            }else{
+                System.out.println("Unable to rotate left");
+            }
+        }else{
+            System.out.println("Tree is empty.");
+        }
     }
     public void printLevels(){
+        if(root != null){
+            Queue<BinaryNode<AnyType>> queue = new LinkedList<>();
+            queue.add(root);
+            while(!queue.isEmpty()){
+                BinaryNode<AnyType> currentNode = queue.peek();
+                System.out.print(currentNode.element + " ");
+                if (currentNode.left != null) {
+                    queue.add(currentNode.left);
+                }
+                if (currentNode.right != null) {
+                    queue.add(currentNode.right);
+                }
+                
+                queue.remove();
+            }
+        }else{
+            System.out.println("Tree is empty.");
+        }
         
     }
     
+    
     // Basic node stored in unbalanced binary search trees
-    private static class BinaryNode<AnyType>
-    {
+    private static class BinaryNode<AnyType> {
         // Constructors
         BinaryNode( AnyType theElement )
         {
@@ -305,31 +508,53 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
     // Test program
     public static void main( String [ ] args )
     {
-        BinarySearchTree<Integer> t = new BinarySearchTree<>( );
-        final int NUMS = 4000;
-        final int GAP  =   37;
+        BinarySearchTree<Integer> tree1 = new BinarySearchTree<>( );
+        tree1.insert(100);
+        tree1.insert(150);
+        tree1.insert(50);
+        tree1.insert(40);
+        tree1.insert(45);
 
-        System.out.println( "Checking... (no more output means success)" );
+        System.out.println("________nodeCount() Test________");
+        System.out.print("Tree 1: ");
+        tree1.printTree();
+        System.out.println("\nNumber of nodes in tree 1: " + tree1.nodeCount());
 
-        for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-            t.insert( i );
+        System.out.println("__________isFull() Test__________");
+        System.out.println("Tree 1 is full: " + tree1.isFull());
 
-        for( int i = 1; i < NUMS; i+= 2 )
-            t.remove( i );
 
-        if( NUMS < 40 )
-            t.printTree( );
-        if( t.findMin( ) != 2 || t.findMax( ) != NUMS - 2 )
-            System.out.println( "FindMin or FindMax error!" );
+        System.out.println("_______compareStructures() Test_______");
+        BinarySearchTree<Integer> tree2 = new BinarySearchTree<>();
+        tree2.insert(60);
+        tree2.insert(65);
+        tree2.insert(32);
+        tree2.insert(20);
+        tree2.insert(25);
+        System.out.print("Tree 2: ");
+        tree2.printTree();
+        System.out.println("\nTree 1 and Tree 2 have the same structure: " + tree2.compareStructure(tree1.root));
 
-        for( int i = 2; i < NUMS; i+=2 )
-            if( !t.contains( i ) )
-                System.out.println( "Find error1!" );
 
-        for( int i = 1; i < NUMS; i+=2 )
-        {
-            if( t.contains( i ) )
-                System.out.println( "Find error2!" );
-        }
+        System.out.println("________equals() Test________");
+        BinarySearchTree<Integer> tree3 = new BinarySearchTree<>();
+        tree3.insert(60);
+        tree3.insert(65);
+        tree3.insert(32);
+        tree3.insert(20);
+        tree3.insert(25);
+        System.out.print("Tree 3: ");
+        tree3.printTree();
+        System.out.println("\nTree 2 and Tree 3 are equal to each other: " + tree3.equals(tree2.root));
+        System.out.println("Tree 3 and Tree 1 are equal to each other: " + tree3.equals(tree1.root));
+        
+        
+        System.out.println("____________Mirror and isMirror Test____________");
+        BinarySearchTree<Integer> tree4 = new BinarySearchTree<>( );
+        tree4.root = tree3.mirror();
+        System.out.print("Tree 4: ");
+        tree4.printTree();
+        System.out.println("\nTree 4 is a mirror of Tree 3: " + tree4.isMirror(tree4.root, tree3.root));
+        
     }
 }

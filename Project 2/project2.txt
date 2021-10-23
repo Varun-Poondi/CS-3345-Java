@@ -68,16 +68,32 @@ Description:
     h) rotateRight
         Performs a single rotation on the node having the passed value.
         If a RotateRight on 100 is performed:
-
-           100                  50
-          /   \                /   \
-         50   150    -->      40   100
-        /                      \     \
-       40                      45    150
-        \ 
-        45
-      
-    g) rotateLeft 
+           Base                Right R                 Left R
+           100                  50                      150
+          /   \                /   \                   /
+         50   150    -->      40   100  -->         100
+        /                      \     \             /
+       40                      45    150         50
+        \                                       /
+        45                                    40  
+                                                \
+                                                 45
+                                                 
+                                                 
+          Base                Right R                 Left R
+           100                  100                     100
+          /   \                /   \                    / \
+         50   150    -->      40   150  -->           40   150
+        /                    /  \                      \ 
+       40                  45    50                     45
+        \                                                 \
+        45                                                 50
+                             
+                                                                                                  
+                                                 
+   
+   
+    g) rotateLeft                              
         As above but left rotation.
 
     i) printLevels - performs a level-by-level printing of the tree.
