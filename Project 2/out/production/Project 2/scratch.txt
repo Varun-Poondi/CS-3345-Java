@@ -1,4 +1,4 @@
-        BinarySearchTree<Integer> tree3 = new BinarySearchTree<>();
+        BinarySearchTree<Integer> tree5 = new BinarySearchTree<>();
         tree3.insert(100);
         tree3.insert(150);
         tree3.insert(50);
@@ -30,14 +30,14 @@
         
         
                 System.out.println("____________rotateRight____________");
-                BinarySearchTree<Integer> tree3 = new BinarySearchTree<>();
-                tree3.insert(180);
-                tree3.insert(190);
-                tree3.insert(166);
-                tree3.insert(163);
-                tree3.insert(172);
-                tree3.insert(175);
-                tree3.insert(200);
+                BinarySearchTree<Integer> tree5 = new BinarySearchTree<>();
+                tree5.insert(180);
+                tree5.insert(190);
+                tree5.insert(166);
+                tree5.insert(163);
+                tree5.insert(172);
+                tree5.insert(175);
+                tree5.insert(200);
                 
                 
                 
@@ -52,12 +52,12 @@
                                             175
                 
                 "*/
-                System.out.println("Tree 3 Head: " + tree3.root.element);
+                System.out.println("Tree 3 Head: " + tree5.root.element);
                 System.out.print("Tree 3: ");
-                tree3.printTree();
+                tree5.printTree();
                 System.out.println("\n");
                 
-                tree3.rotateRight(180);
+                tree5.rotateRight(180);
                 /*
                 Current Tree:
                                           166
@@ -74,15 +74,15 @@
                 
                 */
         
-                System.out.println("\nTree 3 Head: " + tree3.root.element);
+                System.out.println("\nTree 3 Head: " + tree5.root.element);
                 System.out.print("Tree 3: ");
-                tree3.printTree();
+                tree5.printTree();
                 System.out.println("\n");
                 
                 System.out.println("____________rotateLeft____________");
-                tree3.insert(174);
+                tree5.insert(174);
                 System.out.print("Tree 3: ");
-                tree3.printTree();
+                tree5.printTree();
                 System.out.println();
                 
                 /*
@@ -100,7 +100,7 @@
                                                        200 
                 
                 */
-                tree3.rotateLeft(175);
+                tree5.rotateLeft(175);
                 /*
                 Current Tree:
                                           166
@@ -114,8 +114,8 @@
                                          174        200
                 */
                 
-                System.out.print("\nTree 3: ");
-                tree3.printTree();
+                System.out.print("\nTree 5: ");
+                tree5.printTree();
                 System.out.println();
                 
         
