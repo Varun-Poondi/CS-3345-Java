@@ -64,18 +64,19 @@ public class Printjob implements Comparable<Printjob> {
 
     @Override
     public String toString() {
-        return "Printjob{" +
-                "userName='" + userName + '\'' +
-                ", userPriority=" + userPriority +
-                ", numberOfPages=" + numberOfPages +
-                ", jobPriority=" + jobPriority +
-                ", jobType='" + jobType + '\'' +
-                '}' + "\n";
+        String printString = "";
+        printString = 
+                "userName: '" + userName + '\'' +
+                ", userPriority: " + userPriority +
+                ", numberOfPages: " + numberOfPages +
+                ", jobPriority: " + jobPriority + 
+                ", jobType: " + jobType;
+        return printString;
     }
 
     @Override
     public int compareTo(Printjob o) {
-        if(this.jobType.equals(o.jobType) && this.jobPriority <= o.jobPriority){
+        if(this.jobPriority < o.jobPriority){
             return 1;
         }
         return 0;
