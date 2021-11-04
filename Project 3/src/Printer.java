@@ -27,7 +27,13 @@ public class Printer {
         
         System.out.println("Current Heap Size: " + heap.currentHeapSize()); // print current heap size, should be 13 since there are 13 entries
         System.out.println("Order of Job Completion: ");    
-        heap.printHeap();   // print our heap in minOrder and delete the min Val
+        int counter = 0;
+        
+        while(!heap.isEmpty()){ // if the heap is not empty
+            Printjob currentJob = heap.deleteMin(); // get the root
+            System.out.println(counter+1 + ". " + currentJob); // print out the currentJob
+        }
+        
         System.out.println("Current Heap Size: " + heap.currentHeapSize()); // should be 0, since the heap is now empty and all the jobs are complete
     }
     
@@ -43,11 +49,12 @@ public class Printer {
             } catch (Exception e) {
                 System.out.print("File was not found, please try again.\nFile Name: "); 
                 fileName = input.next(); // get the next input
-                fileObj = new File(fileName); //ask for file input again to be tested
+                fileObj = new File(fileName); // ask for file input again to be tested
             }
         }
         return fileName; // return valid file name
     }
+    
     public static void fileReader(Scanner sc){ 
         while(sc.hasNextLine()){ // traverse through lines
             Scanner sc1 = new Scanner(sc.nextLine()); 
