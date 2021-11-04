@@ -31,7 +31,8 @@ public class Printer {
         
         while(!heap.isEmpty()){ // if the heap is not empty
             Printjob currentJob = heap.deleteMin(); // get the root
-            System.out.println(counter+1 + ". " + currentJob); // print out the currentJob
+            counter ++;
+            System.out.println(counter + ". " + currentJob); // print out the currentJob
         }
         
         System.out.println("Current Heap Size: " + heap.currentHeapSize()); // should be 0, since the heap is now empty and all the jobs are complete
