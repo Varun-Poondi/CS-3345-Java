@@ -77,7 +77,9 @@ public class Printjob implements Comparable<Printjob> {
     @Override
     public int compareTo(Printjob o) {
         if(this.jobPriority < o.jobPriority){
-            return 1;
+            return -1;
+        }else if(this.jobPriority == o.jobPriority){
+            return 0;
         }
         return 0;
     }
