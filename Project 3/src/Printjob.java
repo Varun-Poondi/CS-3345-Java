@@ -15,7 +15,7 @@ public class Printjob implements Comparable<Printjob> {
         this.userPriority = userPriority;
         this.numberOfPages = numberOfPages;
         this.jobType = jobType;
-        calculateJobPriority();
+        calculateJobPriority(); // do this for every object created
     }
 
     public String getUserName() {
@@ -51,7 +51,7 @@ public class Printjob implements Comparable<Printjob> {
     }
 
     public void calculateJobPriority(){
-     setJobPriority(this.userPriority * this.numberOfPages);   
+     setJobPriority(this.userPriority * this.numberOfPages);   // given formula
     }
 
     public String getJobType() {
@@ -63,7 +63,7 @@ public class Printjob implements Comparable<Printjob> {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // simple toString() method
         String printString = "";
         printString = 
                 "userName: '" + userName + '\'' +
@@ -76,11 +76,11 @@ public class Printjob implements Comparable<Printjob> {
 
     @Override
     public int compareTo(Printjob o) {
-        if(this.jobPriority < o.jobPriority){
-            return -1;
-        }else if(this.jobPriority == o.jobPriority){
-            return 0;
+        if(this.jobPriority < o.jobPriority){ // if the currentJob has higher presidency over the compared job, 
+            return -1; // return -1 so we can percolate up
+        }else if(this.jobPriority == o.jobPriority){ // if they are the same, priority
+            return 0; // return 0 so we can percolate down, doesn't matter since they are the same
         }
-        return 0;
+        return 1; // return 1 so we can percolate down, the current job has lower presidency than the compared job.
     }
 }
