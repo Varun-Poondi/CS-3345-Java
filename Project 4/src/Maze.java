@@ -2,10 +2,9 @@ import java.util.*;
 
 public class Maze {
     private final DisjSets disjSets;
-    private Cells[][] maze;
-    private int length;
-    private int width;
-    private final ArrayList<Cells> walls = new ArrayList<>();
+    private final Cells[][] maze;
+    private final int length;
+    private final int width;
     
     
     public Maze(int length, int width) {
@@ -15,30 +14,7 @@ public class Maze {
         disjSets = new DisjSets(length*width);
         initMaze();
     }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public Cells[][] getMaze() {
-        return maze;
-    }
-
-    public void setMaze(Cells[][] maze) {
-        this.maze = maze;
-    }
+    
     private void initMaze(){
         int counter = 0;
         for(int i = 0; i < maze.length; i++){
@@ -53,8 +29,8 @@ public class Maze {
         Random dRandom = new Random();
         while(disjSets.find(0) != disjSets.find((length * width) - 1)) {
             //get me a random x and y between 0 and 2
-            int x = getRandomNumberInRange(0, length - 1);
-            int y = getRandomNumberInRange(0, length - 1);
+            int x = randomNumberWithRange(length - 1);
+            int y = randomNumberWithRange(width - 1);
 
             Cells currentCell = maze[x][y];
             //System.out.println(currentCell.getIndexNumber());
@@ -114,36 +90,24 @@ public class Maze {
         }
     }
     public void printMaze(){
-        for (int i = 0; i < maze.length; i++) {
-            for (int a = 0; a < maze[i].length; a++) {
-                System.out.print(maze[i][a].getTopBar());
+        for (Cells[] cells : maze) {
+            for (Cells cell : cells) {
+                System.out.print(cell.getTopBar());
             }
             System.out.println();
-            for (int a = 0; a < maze[i].length; a++) {
-                System.out.print(maze[i][a].getLeftBar() + maze[i][a].getBottomBar() + maze[i][a].getRightBar());
+            for (Cells cell : cells) {
+                System.out.print(cell.getLeftBar() + cell.getBottomBar() + cell.getRightBar());
             }
-        }
-    }
-    public void printCaseType(){
-        for(int i = 0; i < maze.length; i++){
-            for(int j = 0; j < maze[i].length; j++){
-                System.out.print(maze[i][j].getCaseType() + "\t");
-            }
-            System.out.println();
         }
     }
     
     public String toString(){
         return null;
     }
-    private static int getRandomNumberInRange(int min, int max) {
-
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
-        }
-
+    private static int randomNumberWithRange(int max) {
+        
         Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
+        return r.nextInt((max) + 1);
     }
     
     

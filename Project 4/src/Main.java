@@ -1,8 +1,5 @@
 import java.util.Scanner;
 
-//import java.util.Scanner;
-//import java.util.StringJoiner;
-//
 public class Main {
     public static void main(String[] args) {
        int length;
@@ -15,11 +12,9 @@ public class Main {
         width = getInfo.nextInt();
 
         Maze maze = new Maze(length, width);
-        maze.printMaze();
-        System.out.println();
         maze.createRandomMaze();
         maze.printMaze();
-
+        
     }
 
 }

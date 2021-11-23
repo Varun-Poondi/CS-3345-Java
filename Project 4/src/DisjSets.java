@@ -15,11 +15,4 @@ public class DisjSets {
         else
             return find(s[x]);
     }
-    
-    public void printS(){
-        System.out.println();
-        for(int i = 0; i < s.length; i++){
-            System.out.print(s[i] + "\t");
-        }
-    }
 }
