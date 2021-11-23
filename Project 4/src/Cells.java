@@ -10,11 +10,11 @@ public class Cells{
     public Cells(int x, int y, int l, int w, int indexNumber) {
         setShape(x,y,l,w);
         this.indexNumber = indexNumber;
-        findMerge(x,y,l,w);
+        findLocation(x,y,l,w);
     }
     
     public void setShape(int x, int y, int l, int w){
-        if((x == 0 && y == 0) || (x == l-1 && y == w-1)) {
+        if((x == 0 && y == 0) || (x == l-1 && y == w-1)) { // if the cell is the entrance or exit
             setTopBar("   ");
             setRightBar("");
             setLeftBar(" ");
@@ -23,22 +23,22 @@ public class Cells{
             }else{
                 setBottomBar("");
             }
-        }else if(x==0 && y==1) {
+        }else if(x==0 && y==1) { // if is need to keep grid aligned 
             setTopBar(" __");
             setRightBar("|");
             setLeftBar("|");
             setBottomBar("__");
-        }else if(x==0 && y<=w-1) {
+        }else if(x==0 && y<=w-1) { // if the cell is located at the top and isn't the buffer cell
             setTopBar(" __");
             setRightBar("|");
             setLeftBar("");
             setBottomBar("__");
-        }else if(x>=1 && y ==0){
+        }else if(x>=1 && y == 0){ // if the cell is located on the left side
             setTopBar(" ");
             setRightBar("|");
             setLeftBar("|");
             setBottomBar("__");
-        }else{
+        }else{ // all the other cells have the same shape
             setTopBar(" ");
             setRightBar("|");
             setLeftBar("");
@@ -46,25 +46,26 @@ public class Cells{
         }
     }
     
-    public void findMerge(int x, int y, int l, int w){
-        if((x == 0 && y == 0)) {
+    public void findLocation(int x, int y, int l, int w){
+        //first 4 ifs are special cases
+        if((x == 0 && y == 0)) { // if first cell
             caseType = "FIRST";
-        }else if((x == l-1 && y == w-1)){
+        }else if((x == l-1 && y == w-1)){ // if last cell
             caseType = "LAST";
-        }else if (x == l-1 && y ==0){
-            caseType = "LB";
-        }else if (x == 0 && y == w-1) {
+        }else if (x == l-1 && y ==0){ // if cell is located bottom-left
+            caseType = "BL";
+        }else if (x == 0 && y == w-1) { // if cell is located top-right
             caseType = "TR";
-        }else if(x == 0 && y > 0) {
+        }else if(x == 0 && y > 0) { // if cell is located at the top
             caseType = "T";
-        }else if(x == l-1 && y > 0){
+        }else if(x == l-1 && y > 0){ // if cell is located at the bottom
             caseType = "B";
-        }else if(x > 0 && y == 0){
+        }else if(x > 0 && y == 0){ // if cell is located at the left
             caseType = "L";
-        }else if(x > 0 && y== w-1){
+        }else if(x > 0 && y== w-1){ // if cell is located at the right
             caseType = "R";
         }else{
-            caseType = "M";
+            caseType = "M"; // the cell is located in the middle
         }
     }
     
@@ -107,11 +108,6 @@ public class Cells{
     
     public int getIndexNumber() {
         return indexNumber;
-    }
-
-    @Override
-    public String toString() {
-        return  getTopBar()+"\n"+getLeftBar()+getBottomBar()+getRightBar();
     }
     
 }
