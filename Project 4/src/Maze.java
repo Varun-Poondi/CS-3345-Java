@@ -29,7 +29,9 @@ public class Maze {
         Random dRandom = new Random();
         int numberOfUnionsRequired = length*width - 1;
         int counter = 0;
-        while(disjSets.find(0) != disjSets.find((length * width) - 1) && counter != numberOfUnionsRequired) { // if there isn't a path between the start and finish, keep on mining
+        // if there isn't a path between the start and finish, keep on mining
+        // and if everything is in the same equivalence class
+        while(disjSets.find(0) != disjSets.find((length * width) - 1) && counter != numberOfUnionsRequired) { 
             //get me a random x and y between 0 and 2
             
             int x = dRandom.nextInt(length);
