@@ -27,7 +27,9 @@ public class Maze {
     }
     public void createRandomMaze(){
         Random dRandom = new Random();
-        while(disjSets.find(0) != disjSets.find((length * width) - 1)) { // if there isn't a path between the start and finish, keep on mining
+        int numberOfUnionsRequired = length*width - 1;
+        int counter = 0;
+        while(disjSets.find(0) != disjSets.find((length * width) - 1) && counter != numberOfUnionsRequired) { // if there isn't a path between the start and finish, keep on mining
             //get me a random x and y between 0 and 2
             
             int x = dRandom.nextInt(length);
@@ -89,6 +91,7 @@ public class Maze {
                 // if the maze has been updated, update the maze
                 if (updateMaze) {
                     disjSets.union(root1, root2); // union both roots
+                    counter ++;
                 }
             }
         }
