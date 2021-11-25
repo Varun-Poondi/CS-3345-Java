@@ -31,7 +31,7 @@ public class Maze {
         int counter = 0;
         // if there isn't a path between the start and finish, keep on mining
         // and if everything is in the same equivalence class
-        while(disjSets.find(0) != disjSets.find((length * width) - 1) && counter != numberOfUnionsRequired) { 
+        while(counter != numberOfUnionsRequired) { 
             //get me a random x and y between 0 and 2
             
             int x = dRandom.nextInt(length);
@@ -98,6 +98,7 @@ public class Maze {
             }
         }
     }
+    
     public void printMaze(){
         for (Cells[] cells : maze) {
             for (Cells cell : cells) {

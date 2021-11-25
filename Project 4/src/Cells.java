@@ -109,5 +109,4 @@ public class Cells{
     public int getIndexNumber() {
         return indexNumber;
     }
-    
 }
