@@ -21,9 +21,6 @@ public class Main {
 
         // create your random maze and display it
         Maze maze = new Maze(length, width);
-        maze.printMaze();
-        //System.out.println();
-        //maze.printWallType();
         System.out.println();
         maze.createRandomMaze();
         maze.printMaze();
