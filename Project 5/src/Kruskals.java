@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -15,9 +14,9 @@ public class Kruskals {
             this.vertex1 = vertex1;
             this.vertex2 = vertex2;
             this.edgeWeight = edgeWeight;
-            this.hashCode = Math.abs(vertex1.hashCode()) + Math.abs(vertex2.hashCode());
+            this.hashCode = Math.abs(vertex1.hashCode()) + Math.abs(vertex2.hashCode());    //calculate unique code for checking duplicates
         }
-        
+        /*Getters*/
         public String getVertex1() {
             return vertex1;
         }
@@ -40,19 +39,19 @@ public class Kruskals {
         }
 
         @Override
-        public int compareTo(Edge compEdge) {
-            if(this.edgeWeight < compEdge.getEdgeWeight()){
-                return -1 ;
-            } else if (this.edgeWeight == compEdge.getEdgeWeight()){
-                return 0;
+        public int compareTo(Edge compEdge) {   
+            if(this.edgeWeight < compEdge.getEdgeWeight()){ // if the current edge has higher presidency over the compared edge
+                return -1 ; 
+            } else if (this.edgeWeight == compEdge.getEdgeWeight()){ // if they are the same, priority
+                return 0; 
             }
             return 1;
         }
     }
     
-    public static final PriorityQueue<Edge> edges = new PriorityQueue<>();
-    public static final HashMap<Integer, Edge> edgeMap = new HashMap<>();
-    public static final HashMap<String, Integer> vertexMap = new HashMap<>();
+    public static final PriorityQueue<Edge> edges = new PriorityQueue<>();      // holds all non-duplicate edges, and will be used to print out the minimum spanning tree
+    public static final HashMap<Integer, Edge> edgeMap = new HashMap<>();       // holds all edges and stores them into a hashmap, will be used to detect if duplicate edges exist
+    public static final HashMap<String, Integer> vertexMap = new HashMap<>();   // holds all the vertices' Name and their index number, will be used to access a vertex index in the disjSet
     public static DisjSets disjSet;
     
     
@@ -90,43 +89,44 @@ public class Kruskals {
         String neighborVertex;
         int edgeWeight;
         String line;
-        BufferedReader fileReader = new BufferedReader(new FileReader(fileName));
+        BufferedReader fileReader = new BufferedReader(new FileReader(fileName)); // buffer to read the csv file 
         int counter = 0;
-        while((line = fileReader.readLine()) != null){
-            String [] mainVertexData = line.split(",");
-            mainVertex = mainVertexData[0];
-            vertexMap.put(mainVertex, counter);
-            for(int i = 1; i < mainVertexData.length; i += 2){
-                neighborVertex = mainVertexData[i];
+        
+        while((line = fileReader.readLine()) != null){ // assign the currentLine to string to be parsed if the current line is not null
+            String [] mainVertexData = line.split(","); // create an array split by commas
+            mainVertex = mainVertexData[0]; 
+            vertexMap.put(mainVertex, counter); // store info into vertex map for later use
+            for(int i = 1; i < mainVertexData.length; i += 2){  // traverse by 2s since we extract data 2 at a time for every traversal
+                neighborVertex = mainVertexData[i]; 
                 edgeWeight = Integer.parseInt(mainVertexData[i+1]);
-                Edge edge = new Edge(mainVertex, neighborVertex, edgeWeight);
-                if(!edgeMap.containsKey(edge.getHashCode())) {
-                    edgeMap.put(edge.getHashCode(),edge);
-                    edges.add(edge);
+                Edge edge = new Edge(mainVertex, neighborVertex, edgeWeight); // create and edge with the collected date
+                if(!edgeMap.containsKey(edge.getHashCode())) { // if the generated hashcode for the edge doesn't already exist in the hashTable
+                    edgeMap.put(edge.getHashCode(),edge); // add into the edge map
+                    edges.add(edge); // add to the priority queue
                 }
             }
             counter ++;
         }
-        disjSet = new DisjSets(counter);
-        fileReader.close();
+        disjSet = new DisjSets(counter);    // initialize disjSet
+        fileReader.close(); // close file
     }
     
     public static void findMinimumSpanningTree() {
         int counter = 0;
         int totalEdgeWeight = 0;
-        while(counter != vertexMap.size()-1){
-            Edge getEdge = edges.poll();
-            if(getEdge != null) {
-                int vertexA = disjSet.find(vertexMap.get(getEdge.getVertex1()));
-                int vertexB = disjSet.find(vertexMap.get(getEdge.getVertex2()));
-                if(vertexA != vertexB){
-                    disjSet.union(vertexA, vertexB);
-                    System.out.println(getEdge);
-                    counter ++;
-                    totalEdgeWeight += getEdge.getEdgeWeight();
+        while(counter != vertexMap.size()-1){   // while we have all the edges in the same equivalence class
+            Edge getEdge = edges.poll(); // get the head of the queue
+            if(getEdge != null) { 
+                int vertexA = disjSet.find(vertexMap.get(getEdge.getVertex1()));    // get the index of the starting vertex
+                int vertexB = disjSet.find(vertexMap.get(getEdge.getVertex2()));    // get the index of the ending vertex 
+                if(vertexA != vertexB){ // if both vertexes are not in the same equivalence class already
+                    disjSet.union(vertexA, vertexB);    // union both vertices
+                    System.out.println(getEdge);    // print out the current edge
+                    counter ++; 
+                    totalEdgeWeight += getEdge.getEdgeWeight(); // add to the total edge weight
                 }
             }
         }
-        System.out.println("Total Edge Weight: " + totalEdgeWeight);
+        System.out.println("Total Edge Weight: " + totalEdgeWeight); // print out the total edge weight
     }
 }
