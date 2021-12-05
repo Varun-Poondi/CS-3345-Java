@@ -36,7 +36,7 @@ public class Kruskals {
 
         @Override
         public String toString() {
-            return getVertex1() + "\tto\t" + getVertex2() + "\tWeight : " + getEdgeWeight();
+            return vertex1 + "\tto\t" + vertex2 + "\tWeight : " + edgeWeight;
         }
 
         @Override
@@ -50,17 +50,9 @@ public class Kruskals {
         }
     }
     
-    private static class Vertex{
-        private final int indexNumber;
-        public Vertex(int indexNumber) {
-            this.indexNumber = indexNumber;
-        }
-    }
-    
     public static final PriorityQueue<Edge> edges = new PriorityQueue<>();
     public static final HashMap<Integer, Edge> edgeMap = new HashMap<>();
-    public static final HashMap<String, Vertex> vertexMap = new HashMap<>();
-    public static final ArrayList<Edge> kruskalEdges = new ArrayList<>();
+    public static final HashMap<String, Integer> vertexMap = new HashMap<>();
     public static DisjSets disjSet;
     
     
@@ -73,8 +65,6 @@ public class Kruskals {
         fileName = fileChecker(fileObj, fileName, input);   // check if the file exists, else ask for it again
         loadEdgesIntoPriorityQueue(fileName); // read the file
         findMinimumSpanningTree();
-        printMinimumSpanningTree();
-        
     }
     
     public static String fileChecker(File fileObj, String fileName, Scanner input){
@@ -105,13 +95,9 @@ public class Kruskals {
         while((line = fileReader.readLine()) != null){
             String [] mainVertexData = line.split(",");
             mainVertex = mainVertexData[0];
-            
-            Vertex vertex = new Vertex(counter);
-            vertexMap.put(mainVertex, vertex);
-            
+            vertexMap.put(mainVertex, counter);
             for(int i = 1; i < mainVertexData.length; i += 2){
                 neighborVertex = mainVertexData[i];
-                
                 edgeWeight = Integer.parseInt(mainVertexData[i+1]);
                 Edge edge = new Edge(mainVertex, neighborVertex, edgeWeight);
                 if(!edgeMap.containsKey(edge.getHashCode())) {
@@ -122,29 +108,24 @@ public class Kruskals {
             counter ++;
         }
         disjSet = new DisjSets(counter);
+        fileReader.close();
     }
     
     public static void findMinimumSpanningTree() {
         int counter = 0;
+        int totalEdgeWeight = 0;
         while(counter != vertexMap.size()-1){
             Edge getEdge = edges.poll();
             if(getEdge != null) {
-                int vertexA = disjSet.find(vertexMap.get(getEdge.getVertex1()).indexNumber);
-                int vertexB = disjSet.find(vertexMap.get(getEdge.getVertex2()).indexNumber);
+                int vertexA = disjSet.find(vertexMap.get(getEdge.getVertex1()));
+                int vertexB = disjSet.find(vertexMap.get(getEdge.getVertex2()));
                 if(vertexA != vertexB){
                     disjSet.union(vertexA, vertexB);
-                    kruskalEdges.add(getEdge);
+                    System.out.println(getEdge);
                     counter ++;
+                    totalEdgeWeight += getEdge.getEdgeWeight();
                 }
             }
-        }
-    }
-
-    public static void printMinimumSpanningTree(){
-        int totalEdgeWeight = 0;
-        for (Edge kruskalEdge : kruskalEdges) {
-            System.out.println(kruskalEdge);
-            totalEdgeWeight += kruskalEdge.getEdgeWeight();
         }
         System.out.println("Total Edge Weight: " + totalEdgeWeight);
     }
