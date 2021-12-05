@@ -99,13 +99,15 @@ public class Maze {
         }
     }
     
-    public void printMaze(){
+    public void printMaze() throws InterruptedException {
         for (Cells[] cells : maze) {
             for (Cells cell : cells) {
+                Thread.sleep(20);
                 System.out.print(cell.getTopBar()); // print out the top bar first
             }
             System.out.println();
             for (Cells cell : cells) {
+                Thread.sleep(20);
                 System.out.print(cell.getLeftBar() + cell.getBottomBar() + cell.getRightBar()); // print out the rest of the shape
             }
         }

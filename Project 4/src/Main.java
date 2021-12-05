@@ -6,7 +6,7 @@
 
 import java.util.Scanner;
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
        int length;
        int width;
        Scanner getInfo = new Scanner(System.in);
