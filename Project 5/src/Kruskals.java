@@ -55,6 +55,8 @@ public class Kruskals {
             return 1;
         }
     }
+    //  Vital Components
+    // - Hash Map and Priority Queue
     
     public static final PriorityQueue<Edge> edges = new PriorityQueue<>();      // holds all non-duplicate edges, and will be used to print out the minimum spanning tree
     public static final HashMap<Integer, Edge> edgeMap = new HashMap<>();       // holds all edges and stores them into a hashmap, will be used to detect if duplicate edges exist
